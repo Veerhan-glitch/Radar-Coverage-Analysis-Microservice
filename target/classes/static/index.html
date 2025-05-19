@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app="loginApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="LoginController">
+  <h2>Login</h2>
+  <form ng-submit="login()">
+    <label>Name:</label><br>
+    <input type="text" ng-model="user.name" required><br><br>
+    <label>Password:</label><br>
+    <input type="password" ng-model="user.password" required><br><br>
+    <button type="submit">Login</button>
+  </form>
+  <p style="color:green;" ng-if="success">{{success}}</p>
+  <p style="color:red;" ng-if="error">{{error}}</p>
+
+  <script>
+    var app = angular.module("loginApp", []);
+    app.controller("LoginController", function($scope, $http) {
+      $scope.user = {};
+      $scope.login = function() {
+        $http.post("/api/login", $scope.user)
+          .then(function(res) {
+            $scope.success = res.data;
+            $scope.error = "";
+          }, function() {
+            $scope.error = "Invalid credentials";
+            $scope.success = "";
+          });
+      };
+    });
+  </script>
+</body>
+</html>
