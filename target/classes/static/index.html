@@ -14,8 +14,6 @@
     <input type="password" ng-model="user.password" required><br><br>
     <button type="submit">Login</button>
   </form>
-  <p style="color:green;" ng-if="success">{{success}}</p>
-  <p style="color:red;" ng-if="error">{{error}}</p>
 
   <script>
     var app = angular.module("loginApp", []);
@@ -24,11 +22,13 @@
       $scope.login = function() {
         $http.post("/api/login", $scope.user)
           .then(function(res) {
-            $scope.success = res.data;
-            $scope.error = "";
-          }, function() {
-            $scope.error = "Invalid credentials";
-            $scope.success = "";
+            alert(res.data.message);
+          }, function(error) {
+            if (error.status === 401) {
+              alert("Invalid credentials");
+            } else {
+              alert("Server error");
+            }
           });
       };
     });
