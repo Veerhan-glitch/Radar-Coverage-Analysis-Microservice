@@ -14,8 +14,11 @@ public class UserService {
     private UserRepository userRepository;
 
     public boolean authenticate(String name, String password) {
-        boolean found = userRepository.findByNameAndPassword(name, password).isPresent();
-        log.info("Repository findByNameAndPassword({}, {}) -> {}", name, password, found);
+        boolean found = userRepository.findByName(name)
+            .map(user -> user.getPassword().equals(password))
+            .orElse(false);
+
+        log.info("Authentication attempt for user '{}': {}", name, found);
         return found;
     }
 }
