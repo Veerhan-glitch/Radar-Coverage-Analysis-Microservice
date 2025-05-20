@@ -11,30 +11,11 @@ import java.util.Map;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class LoginController {
+
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserDto dto) {
-        String name = dto.getName();
-        String pwd  = dto.getPassword();
-        System.out.printf("Attempt login: name=%s, password=%s%n", name, pwd);  // debug
-
-        boolean ok = userService.authenticate(name, pwd);
-
-        if (ok) {
-            System.err.println(ok);
-            System.err.println("Login successful");
-            return ResponseEntity.ok(Map.of("message", "Login successful"));
-        } else {
-            System.err.println(ok);
-            System.err.println("Invalid credentials");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid credentials"));
-        }
-    }
-
-    // DTO to bind JSON
+    // DTO to bind JSON for both login and register
     public static class UserDto {
         private String name;
         private String password;
@@ -44,5 +25,38 @@ public class LoginController {
 
         public String getPassword() { return password; }
         public void setPassword(String password) { this.password = password; }
+    }
+
+    /**
+     * POST /api/register
+     * Body: { "name": "...", "password": "..." }
+     */
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, String>> register(@RequestBody UserDto dto) {
+        boolean created = userService.register(dto.getName(), dto.getPassword());
+        if (!created) {
+            return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of("error", "Username already exists"));
+        }
+        return ResponseEntity.ok(Map.of("message", "User registered"));
+    }
+
+    /**
+     * POST /api/login
+     * Body: { "name": "...", "password": "..." }
+     */
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody UserDto dto) {
+        System.out.printf("Attempt login: name=%s, password=%s%n", dto.getName(), dto.getPassword());
+
+        boolean ok = userService.authenticate(dto.getName(), dto.getPassword());
+        if (ok) {
+            return ResponseEntity.ok(Map.of("message", "Login successful"));
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Invalid credentials"));
+        }
     }
 }

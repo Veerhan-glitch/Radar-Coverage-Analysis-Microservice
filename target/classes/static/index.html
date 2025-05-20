@@ -4,15 +4,89 @@
   <meta charset="UTF-8">
   <title>Login</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #dceef2, #fef6e4);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 2px solid #d0cfcf;
+      width: 300px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #264653;
+    }
+
+    label {
+      font-weight: bold;
+      color: #2a9d8f;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2a9d8f;
+      box-shadow: 0 0 8px #2a9d8f33;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #2a9d8f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #21867a;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body ng-controller="LoginController">
-  <h2>Login</h2>
   <form ng-submit="login()">
+    <h2>Login</h2>
     <label>Name:</label><br>
-    <input type="text" ng-model="user.name" required><br><br>
+    <input type="text" ng-model="user.name" required><br>
     <label>Password:</label><br>
-    <input type="password" ng-model="user.password" required><br><br>
-    <button type="submit">Login</button>
+    <input type="password" ng-model="user.password" required><br>
+    <button type="submit">Login</button>  
+    <p style="text-align: center; margin-top: 10px;">
+      Don't have an account?
+      <a href="reg.html" style="color: #2a9d8f; text-decoration: none; font-weight: bold;">Register here</a>
+    </p>
   </form>
 
   <script>
@@ -34,4 +108,4 @@
     });
   </script>
 </body>
-</html>
+</html

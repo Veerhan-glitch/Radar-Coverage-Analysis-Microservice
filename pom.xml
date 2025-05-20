@@ -21,27 +21,35 @@
   </properties>
 
   <dependencies>
-    <!-- Web + JSON -->
+    <!-- Spring Web -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-    <!-- JPA -->
+
+    <!-- Spring Data JPA -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
-    <!-- PostgreSQL driver -->
+
+    <!-- PostgreSQL Driver -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
     </dependency>
+
+    <!-- Validation API (fixes jakarta.validation.*) -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <!-- Spring Boot runner -->
+      <!-- Spring Boot Plugin -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>

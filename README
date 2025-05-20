@@ -12,3 +12,5 @@
 - Database data is persisted in a Docker volume.
 - If you want to reset DB data, run:
    docker-compose down -v
+
+# sudo docker-compose up --build
