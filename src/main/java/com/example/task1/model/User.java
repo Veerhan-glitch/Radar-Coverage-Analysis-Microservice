@@ -1,8 +1,10 @@
 package com.example.task1.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,42 +18,57 @@ public class User {
     @NotBlank(message = "Username is required")
     private String name;
 
+    @Column(length = 100)
+    private String email;
+
     @Column(nullable = false)
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    /* ---------- Constructors ---------- */
+    @ElementCollection
+    private List<String> armyOptions;
 
-    public User() { }
+    @ElementCollection
+    private List<String> navyOptions;
+
+    @ElementCollection
+    private List<String> airforceOptions;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public User() {}
 
     public User(String name, String password) {
         this.name = name;
         this.password = password;
     }
 
-    /* ---------- Getters & Setters ---------- */
+    // Getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getName() {
-        return name;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public List<String> getArmyOptions() { return armyOptions; }
+    public void setArmyOptions(List<String> armyOptions) { this.armyOptions = armyOptions; }
 
-    public String getPassword() {
-        return password;
-    }
+    public List<String> getNavyOptions() { return navyOptions; }
+    public void setNavyOptions(List<String> navyOptions) { this.navyOptions = navyOptions; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public List<String> getAirforceOptions() { return airforceOptions; }
+    public void setAirforceOptions(List<String> airforceOptions) { this.airforceOptions = airforceOptions; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

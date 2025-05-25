@@ -1,11 +1,23 @@
 package com.example.task1.controller;
 
-import com.example.task1.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.task1.model.User;
+import com.example.task1.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -15,48 +27,63 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    // DTO to bind JSON for both login and register
     public static class UserDto {
         private String name;
         private String password;
-
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
-
         public String getPassword() { return password; }
         public void setPassword(String password) { this.password = password; }
     }
 
-    /**
-     * POST /api/register
-     * Body: { "name": "...", "password": "..." }
-     */
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody UserDto dto) {
         boolean created = userService.register(dto.getName(), dto.getPassword());
         if (!created) {
-            return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(Map.of("error", "Username already exists"));
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "Username already exists"));
         }
         return ResponseEntity.ok(Map.of("message", "User registered"));
     }
 
-    /**
-     * POST /api/login
-     * Body: { "name": "...", "password": "..." }
-     */
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserDto dto) {
-        System.out.printf("Attempt login: name=%s, password=%s%n", dto.getName(), dto.getPassword());
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserDto dto) {
+        return userService.findByName(dto.getName())
+            .filter(user -> user.getPassword().equals(dto.getPassword()))
+            .map(user -> Map.of(
+                "message", "Login successful",
+                "user", Map.of(
+                    "id", user.getId(),
+                    "name", user.getName(),
+                    "armyOptions", user.getArmyOptions(),
+                    "navyOptions", user.getNavyOptions(),
+                    "airforceOptions", user.getAirforceOptions()
+                )
+            ))
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "Invalid credentials")));
+    }
 
-        boolean ok = userService.authenticate(dto.getName(), dto.getPassword());
-        if (ok) {
-            return ResponseEntity.ok(Map.of("message", "Login successful"));
-        } else {
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", "Invalid credentials"));
-        }
+
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userService.findAll();
+    }
+
+    @PostMapping("/users")
+    public User createUser(@RequestBody User user) {
+        return userService.save(user);
+    }
+
+    @PutMapping("/users/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        return userService.save(user);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteById(id);
     }
 }

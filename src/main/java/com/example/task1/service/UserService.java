@@ -1,40 +1,58 @@
 package com.example.task1.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.example.task1.model.User;
 import com.example.task1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
 
-    public boolean authenticate(String name, String password) {
-        boolean found = userRepository.findByName(name)
-            .map(user -> user.getPassword().equals(password))
-            .orElse(false);
-
-        log.info("Authentication attempt for user '{}': {}", name, found);
-        return found;
+    public boolean authenticate(String name, String rawPassword) {
+        return userRepository.findByName(name)
+                .map(user -> user.getPassword().equals(rawPassword))
+                .orElse(false);
     }
 
     public boolean register(String name, String password) {
-        if (userRepository.existsByName(name)) {
-            log.warn("Attempt to register already existing user '{}'", name);
-            return false;
-        }
-
-        User newUser = new User();
-        newUser.setName(name);
-        newUser.setPassword(password); // Consider hashing the password in production
-        userRepository.save(newUser);
-        
-        log.info("Registered new user '{}'", name);
+        if (userRepository.existsByName(name)) return false;
+        User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+        user.setCreatedAt(LocalDateTime.now());
+        userRepository.save(user);
         return true;
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public User save(User user) {
+        if (user.getId() == null) {
+            user.setCreatedAt(LocalDateTime.now());
+        } else {
+            user.setUpdatedAt(LocalDateTime.now());
+        }
+        return userRepository.save(user);
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public Optional<User> findByName(String name) {
+        return userRepository.findByName(name);
     }
 }

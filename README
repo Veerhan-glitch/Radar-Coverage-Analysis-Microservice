@@ -1,16 +1,34 @@
-# Requirements
 - Install Docker and Docker Compose
 
-# Steps
 1. Clone or copy the project folder.
 2. Build and run containers:
    docker-compose up --build
 
-3. Access the app at http://localhost:8080
+3. Access the app at http://localhost:8081
 
-# Notes
 - Database data is persisted in a Docker volume.
 - If you want to reset DB data, run:
    docker-compose down -v
 
-# sudo docker-compose up --build
+- To run out of docker
+mvn clean spring-boot:run
+Access the app at http://localhost:8080
+
+
+
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+INSERT INTO users (name, password) VALUES
+('admin', 'admin123');
+
+
+
+
+psql -U postgres
