@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html ng-app="loginApp">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Login</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <style>
     body {
       background: linear-gradient(to bottom, #dceef2, #fef6e4);
@@ -36,7 +35,8 @@
       color: #2a9d8f;
     }
 
-    select {
+    select,
+    input[type="password"] {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -48,23 +48,7 @@
       background-color: white;
     }
 
-    select:focus {
-      outline: none;
-      border-color: #2a9d8f;
-      box-shadow: 0 0 8px #2a9d8f33;
-    }
-
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-      transition: all 0.3s ease-in-out;
-    }
-
+    select:focus,
     input:focus {
       outline: none;
       border-color: #2a9d8f;
@@ -93,62 +77,80 @@
     }
   </style>
 </head>
-<body ng-controller="LoginController">
-  <form ng-submit="login()">
+<body>
+  <form id="loginForm">
     <h2>Login</h2>
-    <label>Name:</label><br />
-    <select ng-model="user.name" ng-options="u.name as u.name for u in users" required>
-      <option value="" disabled>Select username</option>
+    <label for="username">Name:</label><br />
+    <select id="username" required>
+      <option value="">Select username</option>
     </select><br />
-    <label>Password:</label><br />
-    <input type="password" ng-model="user.password" required /><br />
-    <button type="submit" ng-disabled="!user.name || !user.password">Login</button>
-    <!-- <p style="text-align: center; margin-top: 10px;">
-      Don't have an account?
-      <a href="reg.html" style="color: #2a9d8f; text-decoration: none; font-weight: bold;">Register here</a>
-    </p> -->
+
+    <label for="password">Password:</label><br />
+    <input type="password" id="password" required /><br />
+
+    <button type="submit">Login</button>
   </form>
 
   <script>
-    var app = angular.module("loginApp", []);
+    document.addEventListener("DOMContentLoaded", function () {
+      const usernameSelect = document.getElementById("username");
+      const loginForm = document.getElementById("loginForm");
 
-    app.controller("LoginController", function ($scope, $http) {
-      $scope.user = {};
-      $scope.users = [];
+      // Load usernames
+      fetch("/api/users")
+        .then(response => response.json())
+        .then(data => {
+          data.forEach(user => {
+            const option = document.createElement("option");
+            option.value = user.name;
+            option.textContent = user.name;
+            usernameSelect.appendChild(option);
+          });
+        })
+        .catch(() => alert("Failed to load users."));
 
-      // Load usernames for dropdown (optional)
-      $http.get("/api/users").then(function (res) {
-        $scope.users = res.data;
-      });
+      // Handle login form submission
+      loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-      $scope.login = function () {
-        $http.post("/api/login", $scope.user).then(
-          function (res) {
-            const user = res.data.user;
-            localStorage.setItem("currentUser", JSON.stringify(user));
+        const name = usernameSelect.value;
+        const password = document.getElementById("password").value;
 
-            const isAdmin =
-              (!user.armyOptions || user.armyOptions.length === 0) &&
-              (!user.navyOptions || user.navyOptions.length === 0) &&
-              (!user.airforceOptions || user.airforceOptions.length === 0);
+        if (!name || !password) {
+          alert("Please fill in all fields.");
+          return;
+        }
 
-            if (isAdmin) {
-              window.location.href = "/dash.html"; // Admin page
-            } else {
-              window.location.href = "/userdash.html"; // Regular user page
-            }
-          },
-          function (error) {
-            if (error.status === 401) {
-              alert("Invalid credentials");
-            } else if (error.status === 400) {
-              alert("Bad request");
-            } else {
-              alert("Server error");
-            }
+        fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, password })
+        })
+        .then(response => {
+          if (!response.ok) {
+            if (response.status === 401) throw new Error("Invalid credentials.");
+            if (response.status === 400) throw new Error("Bad request.");
+            throw new Error("Server error.");
           }
-        );
-      };
+          return response.json();
+        })
+        .then(data => {
+          const user = data.user;
+          localStorage.setItem("currentUser", JSON.stringify(user));
+
+          const isAdmin =
+            (!user.armyOptions || user.armyOptions.length === 0) &&
+            (!user.navyOptions || user.navyOptions.length === 0) &&
+            (!user.airforceOptions || user.airforceOptions.length === 0);
+
+          if (isAdmin) {
+            window.location.href = "/dash.html";
+          } else {
+            window.location.href = "/userdash.html";
+          }
+        })
+        .catch(error => alert(error.message));
+      });
     });
   </script>
 </body>
