@@ -260,11 +260,28 @@
                 overflow-x: auto;
             }
         }
+          #logout-btn {
+    background: #e76f51;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  #logout-btn:hover {
+    background: #d65f44;
+  }
     </style>
 </head>
 <body>
   <div class="dashboard">
-    <header class="header"><h1>Military Personnel Management</h1></header>
+    <header class="header">
+    <h1>Military Personnel Management</h1>
+  <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
+  <!-- <div>Welcome, <span id="username">User</span></div> -->
+    <button id="logout-btn">Logout</button>
+    </div>
+</header>
     <aside class="sidebar">
       <ul class="sidebar-menu">
         <li onclick="showPage('dashboard')" class="active">Dashboard</li>
@@ -454,6 +471,11 @@
     }
 
     window.onload = () => displayUsers();
+
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+  window.location.href = "index.html";  // Redirect to index page after logout
+  });
   </script>
 </body>
 </html>

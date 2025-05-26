@@ -1,8 +1,6 @@
 package com.example.task1.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,14 +13,12 @@ public class User {
     private Long id;
 
     @Column(length = 50, nullable = false, unique = true)
-    @NotBlank(message = "Username is required")
     private String name;
 
     @Column(length = 100)
     private String email;
 
     @Column(nullable = false)
-    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     @ElementCollection
