@@ -1,4 +1,199 @@
 <!DOCTYPE html>
+<html lang="en" ng-app="userDashApp">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard</title>
+  <script src="js/angular.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: 50px 1fr;
+      grid-template-areas:
+        "header header"
+        "sidebar main";
+      height: 100vh;
+    }
+    header {
+      grid-area: header;
+      background: #333;
+      color: white;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      justify-content: space-between;
+    }
+    aside {
+      grid-area: sidebar;
+      background: #444;
+      color: white;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    main {
+      grid-area: main;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .branch {
+      cursor: pointer;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      border-radius: 3px;
+    }
+    .branch:hover {
+      background: #555;
+    }
+    .powers-list {
+      margin: 0 0 10px 15px;
+      padding: 0;
+      list-style: none;
+      display: none;
+    }
+    .powers-list.show {
+      display: block;
+    }
+    .powers-list li {
+      padding: 4px 8px;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+    .powers-list li:hover {
+      background: #666;
+    }
+    button.power-btn {
+      margin: 5px 5px 5px 0;
+      padding: 8px 15px;
+      background: #007bff;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button.power-btn:hover {
+      background: #0056b3;
+    }
+    iframe {
+      width: 100%;
+      height: 70vh;
+      border: none;
+      margin-top: 10px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px #ccc;
+    }
+  </style>
+</head>
+<body ng-controller="UserDashController as ctrl">
+  <header>
+    <div>Welcome, {{ ctrl.user.name || 'Guest' }}</div>
+    <button ng-click="ctrl.logout()">Logout</button>
+  </header>
+
+  <aside>
+    <div ng-repeat="branch in ctrl.branches">
+      <div class="branch" ng-click="ctrl.selectBranch(branch)" >
+        <span>{{ branch.name | capitalize }}</span>
+        <span ng-click="$event.stopPropagation(); ctrl.toggleDropdown(branch)" style="user-select:none; cursor:pointer;">
+          {{ branch.expanded ? '▼' : '▶' }}
+        </span>
+      </div>
+      <ul class="powers-list" ng-class="{show: branch.expanded}">
+        <li ng-repeat="power in branch.powers" ng-click="ctrl.loadPower(branch.name, power)">
+          {{ power }}
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    <div ng-if="!ctrl.selectedBranch">
+      <h2>Welcome</h2>
+      <p>Select a branch to see powers.</p>
+    </div>
+
+    <div ng-if="ctrl.selectedBranch">
+      <h2>{{ ctrl.selectedBranch.name | capitalize }} Powers</h2>
+      <div>
+        <button class="power-btn" ng-repeat="power in ctrl.selectedBranch.powers" ng-click="ctrl.loadPower(ctrl.selectedBranch.name, power)">
+          {{ power }}
+        </button>
+      </div>
+      <iframe ng-if="ctrl.selectedPower" ng-src="{{ ctrl.powerUrl }}" sandbox></iframe>
+    </div>
+  </main>
+
+  <script>
+    angular.module('userDashApp', [])
+      .filter('capitalize', function () {
+        return function (input) {
+          if (!input) return '';
+          return input.charAt(0).toUpperCase() + input.slice(1);
+        };
+      })
+      .controller('UserDashController', ['$sce', '$window', function ($sce, $window) {
+        var vm = this;
+
+        // Load user from localStorage or fallback
+        vm.user = JSON.parse(localStorage.getItem('currentUser')) || {
+          name: 'Guest',
+          armyOptions: ['Infantry', 'Tank Division', 'Artillery'],
+          navyOptions: ['Submarine', 'Destroyer', 'Carrier'],
+          airforceOptions: ['Fighter Jets', 'Bombers', 'Helicopters']
+        };
+
+        // Branches data
+        vm.branches = [
+          { name: 'army', powers: vm.user.armyOptions || [], expanded: false },
+          { name: 'navy', powers: vm.user.navyOptions || [], expanded: false },
+          { name: 'airforce', powers: vm.user.airforceOptions || [], expanded: false }
+        ];
+
+        vm.selectedBranch = null;
+        vm.selectedPower = null;
+        vm.powerUrl = null;
+
+        // Toggle dropdown arrow
+        vm.toggleDropdown = function(branch) {
+          branch.expanded = !branch.expanded;
+        };
+
+        // Clicking branch name shows powers in main area and collapses dropdowns
+        vm.selectBranch = function(branch) {
+          vm.selectedBranch = branch;
+          vm.selectedPower = null;
+          vm.powerUrl = null;
+          // close all dropdowns except this branch
+          vm.branches.forEach(b => {
+            if (b !== branch) b.expanded = false;
+          });
+        };
+
+        // Load power iframe url
+        vm.loadPower = function(branchName, powerName) {
+          vm.selectedPower = powerName;
+          var url = branchName + '/' + encodeURIComponent(powerName) + '.html';
+          vm.powerUrl = $sce.trustAsResourceUrl(url);
+        };
+
+        vm.logout = function() {
+          localStorage.removeItem('currentUser');
+          $window.location.href = 'index.html';
+        };
+      }]);
+  </script>
+</body>
+</html>
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -447,4 +642,4 @@ usernameElem.textContent = user.name || "Guest";
 
 </body>
 </html>
-
+ -->

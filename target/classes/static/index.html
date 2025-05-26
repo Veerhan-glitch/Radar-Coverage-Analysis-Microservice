@@ -1,4 +1,166 @@
 <!DOCTYPE html>
+<html ng-app="loginApp">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="js/angular.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #dceef2, #fef6e4);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 2px solid #d0cfcf;
+      width: 300px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #264653;
+    }
+
+    label {
+      font-weight: bold;
+      color: #2a9d8f;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+      background-color: white;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #2a9d8f;
+      box-shadow: 0 0 8px #2a9d8f33;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: all 0.3s ease-in-out;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2a9d8f;
+      box-shadow: 0 0 8px #2a9d8f33;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #2a9d8f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #21867a;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body ng-controller="LoginController">
+  <form ng-submit="login()">
+    <h2>Login</h2>
+    <label>Name:</label><br />
+    <select ng-model="user.name" ng-options="u.name as u.name for u in users" required>
+      <option value="" disabled>Select username</option>
+    </select><br />
+    <label>Password:</label><br />
+    <input type="password" ng-model="user.password" required /><br />
+    <button type="submit" ng-disabled="!user.name || !user.password">Login</button>
+    <!-- <p style="text-align: center; margin-top: 10px;">
+      Don't have an account?
+      <a href="reg.html" style="color: #2a9d8f; text-decoration: none; font-weight: bold;">Register here</a>
+    </p> -->
+  </form>
+
+  <script>
+    var app = angular.module("loginApp", []);
+
+    app.controller("LoginController", function ($scope, $http) {
+      $scope.user = {};
+      $scope.users = [];
+
+      // Load usernames for dropdown (optional)
+      $http.get("/api/users").then(function (res) {
+        $scope.users = res.data;
+      });
+
+      $scope.login = function () {
+        $http.post("/api/login", $scope.user).then(
+          function (res) {
+            const user = res.data.user;
+            localStorage.setItem("currentUser", JSON.stringify(user));
+
+            const isAdmin =
+              (!user.armyOptions || user.armyOptions.length === 0) &&
+              (!user.navyOptions || user.navyOptions.length === 0) &&
+              (!user.airforceOptions || user.airforceOptions.length === 0);
+
+            if (isAdmin) {
+              window.location.href = "/dash.html"; // Admin page
+            } else {
+              window.location.href = "/userdash.html"; // Regular user page
+            }
+          },
+          function (error) {
+            if (error.status === 401) {
+              alert("Invalid credentials");
+            } else if (error.status === 400) {
+              alert("Bad request");
+            } else {
+              alert("Server error");
+            }
+          }
+        );
+      };
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+<!-- 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -154,4 +316,4 @@
     });
   </script>
 </body>
-</html>
+</html> -->

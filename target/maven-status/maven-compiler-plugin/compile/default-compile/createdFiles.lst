@@ -1,6 +1,6 @@
-com/example/task1/controller/LoginController$UserDto.class
 com/example/task1/Task1Application.class
-com/example/task1/repository/UserRepository.class
 com/example/task1/controller/LoginController.class
-com/example/task1/model/User.class
 com/example/task1/service/UserService.class
+com/example/task1/model/User.class
+com/example/task1/controller/LoginController$UserDto.class
+com/example/task1/repository/UserRepository.class

@@ -32,3 +32,28 @@ INSERT INTO users (name, password) VALUES
 
 
 psql -U postgres
+
+
+java -jar target/task1-1.0.0.jar
+
+
+
+💻 ON SIR’S COMPUTER (in Eclipse)
+🧩 Option 1: Eclipse with Embedded Maven (Best)
+If Eclipse has Maven integration (most modern Eclipse versions do):
+
+Open Eclipse → File > Import > Existing Maven Projects
+
+Select the unzipped task1/ folder.
+
+IMPORTANT: Set Eclipse to use your custom Maven repo:
+
+Go to:
+Window > Preferences > Maven > User Settings
+
+Set User Settings to:
+path/to/task1/settings-local.xml
+
+Click Update Settings or Rebuild Project if needed.
+
+✅ Now Eclipse will use your local m2_repo/ instead of downloading anything.

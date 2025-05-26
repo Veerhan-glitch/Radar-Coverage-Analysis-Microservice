@@ -1,4 +1,441 @@
-<!DOCTYPE html>
+<div class="dashboard">
+  <header class="header">
+    <h1>Military Personnel Management</h1>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-areas:
+                "header header header"
+                "sidebar main main"
+                "sidebar main main";
+            grid-template-columns: 250px 1fr 1fr;
+            grid-template-rows: 80px 1fr;
+            height: 100vh;
+        }
+
+        .header {
+            grid-area: header;
+            background-color: #1a237e;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .sidebar {
+            grid-area: sidebar;
+            background-color: #283593;
+            color: white;
+            padding: 20px 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-menu li:hover {
+            background-color: #3949ab;
+        }
+
+        .sidebar-menu li.active {
+            background-color: #3949ab;
+            border-left: 4px solid #00bcd4;
+        }
+
+        .main-content {
+            grid-area: main;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #1a237e;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .tab-container {
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab.active {
+            background-color: #1a237e;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input {
+            margin-right: 10px;
+        }
+
+        .btn {
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #283593;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="username"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* Users List Page Styles */
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .users-table th, .users-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .users-table th {
+            background-color: #1a237e;
+            color: white;
+            font-weight: 500;
+        }
+
+        .users-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .users-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .branch-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .army-tag {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .navy-tag {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .airforce-tag {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .no-users {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-areas:
+                    "header"
+                    "main"
+                    "sidebar";
+                grid-template-columns: 1fr;
+                grid-template-rows: 80px 1fr auto;
+            }
+
+            .sidebar {
+                padding: 10px 0;
+            }
+
+            .sidebar-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .sidebar-menu li {
+                white-space: nowrap;
+                padding: 10px 15px;
+            }
+
+            .users-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+          #logout-btn {
+    background: #e76f51;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  #logout-btn:hover {
+    background: #d65f44;
+  }
+    </style>
+    <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
+      <button id="logout-btn" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <ul class="sidebar-menu">
+      <li [class.active]="page === 'dashboard'" (click)="setPage('dashboard')">Dashboard</li>
+      <li [class.active]="page === 'create-user'" (click)="setPage('create-user')">Create User</li>
+      <li [class.active]="page === 'user-management'" (click)="setPage('user-management')">User Management</li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <!-- Dashboard Page -->
+    <section *ngIf="page === 'dashboard'" class="page active">
+      <div class="card">
+        <h2 class="card-title">Dashboard Overview</h2>
+        <p>Welcome to the Military Personnel Management System.</p>
+      </div>
+    </section>
+
+    <!-- Create User Page -->
+    <section *ngIf="page === 'create-user'" class="page">
+      <div class="card">
+        <h2 class="card-title">{{ editingUserId ? 'Edit User' : 'Create New User' }}</h2>
+
+        <div class="form-group">
+          <label>Username</label>
+          <input [(ngModel)]="username" type="text" placeholder="Enter username" />
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input [(ngModel)]="email" type="email" placeholder="Enter email" />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input [(ngModel)]="password" type="password" placeholder="Enter password" />
+        </div>
+
+        <div class="form-group">
+          <label>Military Branch</label>
+          <div class="tab-container">
+            <div class="tabs">
+              <div
+                class="tab"
+                [class.active]="activeTab === 'army'"
+                (click)="setActiveTab('army')"
+              >
+                Army
+              </div>
+              <div
+                class="tab"
+                [class.active]="activeTab === 'navy'"
+                (click)="setActiveTab('navy')"
+              >
+                Navy
+              </div>
+              <div
+                class="tab"
+                [class.active]="activeTab === 'airforce'"
+                (click)="setActiveTab('airforce')"
+              >
+                Air Force
+              </div>
+            </div>
+
+            <div id="army" class="tab-content" *ngIf="activeTab === 'army'">
+              <div class="checkbox-group">
+                <div class="checkbox-item" *ngFor="let branch of (Object.keys(armyOptions))">
+                  <input
+                    type="checkbox"
+                    [id]="branch"
+                    [(ngModel)]="armyOptions[branch]"
+                    name="army"
+                  />
+                  <label [for]="branch">{{ branch }}</label>
+                </div>
+              </div>
+            </div>
+
+            <div id="navy" class="tab-content" *ngIf="activeTab === 'navy'">
+              <div class="checkbox-group">
+                <div class="checkbox-item" *ngFor="let branch of (Object.keys(navyOptions))">
+                  <input
+                    type="checkbox"
+                    [id]="branch"
+                    [(ngModel)]="navyOptions[branch]"
+                    name="navy"
+                  />
+                  <label [for]="branch">{{ branch }}</label>
+                </div>
+              </div>
+            </div>
+
+            <div id="airforce" class="tab-content" *ngIf="activeTab === 'airforce'">
+              <div class="checkbox-group">
+                <div class="checkbox-item" *ngFor="let branch of (Object.keys(airforceOptions))">
+                  <input
+                    type="checkbox"
+                    [id]="branch"
+                    [(ngModel)]="airforceOptions[branch]"
+                    name="airforce"
+                  />
+                  <label [for]="branch">{{ branch }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button id="submit-btn" (click)="createUser()">
+          {{ editingUserId ? 'Update User' : 'Create User' }}
+        </button>
+      </div>
+    </section>
+
+    <!-- User Management Page -->
+    <section *ngIf="page === 'user-management'" class="page">
+      <div class="card">
+        <h2 class="card-title">User Management</h2>
+
+        <div *ngIf="loadingUsers">Loading users...</div>
+        <div *ngIf="noUsers && !loadingUsers">No users found.</div>
+
+        <table *ngIf="!loadingUsers && !noUsers" class="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Army Options</th>
+              <th>Navy Options</th>
+              <th>Air Force Options</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.armyOptions.join(', ') || '-' }}</td>
+              <td>{{ user.navyOptions.join(', ') || '-' }}</td>
+              <td>{{ user.airforceOptions.join(', ') || '-' }}</td>
+              <td>
+                <button (click)="editUser(user.id)">Edit</button>
+                <button (click)="deleteUser(user.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -278,7 +715,6 @@
     <header class="header">
     <h1>Military Personnel Management</h1>
   <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
-  <!-- <div>Welcome, <span id="username">User</span></div> -->
     <button id="logout-btn">Logout</button>
     </div>
 </header>
@@ -474,8 +910,8 @@
 
   document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.removeItem("currentUser");
-  window.location.href = "index.html";  // Redirect to index page after logout
+  window.location.href = "index.html";  
   });
   </script>
 </body>
-</html>
+</html> -->
