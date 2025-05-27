@@ -1,446 +1,11 @@
-<div class="dashboard">
-  <header class="header">
-    <h1>Military Personnel Management</h1>
-        <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-areas:
-                "header header header"
-                "sidebar main main"
-                "sidebar main main";
-            grid-template-columns: 250px 1fr 1fr;
-            grid-template-rows: 80px 1fr;
-            height: 100vh;
-        }
-
-        .header {
-            grid-area: header;
-            background-color: #1a237e;
-            color: white;
-            display: flex;
-            align-items: center;
-            padding: 0 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: 500;
-        }
-
-        .sidebar {
-            grid-area: sidebar;
-            background-color: #283593;
-            color: white;
-            padding: 20px 0;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            padding: 15px 30px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar-menu li:hover {
-            background-color: #3949ab;
-        }
-
-        .sidebar-menu li.active {
-            background-color: #3949ab;
-            border-left: 4px solid #00bcd4;
-        }
-
-        .main-content {
-            grid-area: main;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card-title {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #1a237e;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .tab-container {
-            margin-bottom: 20px;
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #f1f1f1;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .tab.active {
-            background-color: #1a237e;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 20px 0;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-item input {
-            margin-right: 10px;
-        }
-
-        .btn {
-            background-color: #1a237e;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #283593;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group input[type="username"],
-        .form-group input[type="email"],
-        .form-group input[type="password"],
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        /* Users List Page Styles */
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .users-table th, .users-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .users-table th {
-            background-color: #1a237e;
-            color: white;
-            font-weight: 500;
-        }
-
-        .users-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .users-table tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .branch-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-
-        .army-tag {
-            background-color: #4caf50;
-            color: white;
-        }
-
-        .navy-tag {
-            background-color: #2196f3;
-            color: white;
-        }
-
-        .airforce-tag {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .no-users {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-areas:
-                    "header"
-                    "main"
-                    "sidebar";
-                grid-template-columns: 1fr;
-                grid-template-rows: 80px 1fr auto;
-            }
-
-            .sidebar {
-                padding: 10px 0;
-            }
-
-            .sidebar-menu {
-                display: flex;
-                overflow-x: auto;
-            }
-
-            .sidebar-menu li {
-                white-space: nowrap;
-                padding: 10px 15px;
-            }
-
-            .users-table {
-                display: block;
-                overflow-x: auto;
-            }
-        }
-          #logout-btn {
-    background: #e76f51;
-    border: none;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  #logout-btn:hover {
-    background: #d65f44;
-  }
-    </style>
-    <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
-      <button id="logout-btn" (click)="logout()">Logout</button>
-    </div>
-  </header>
-
-  <aside class="sidebar">
-    <ul class="sidebar-menu">
-      <li [class.active]="page === 'dashboard'" (click)="setPage('dashboard')">Dashboard</li>
-      <li [class.active]="page === 'create-user'" (click)="setPage('create-user')">Create User</li>
-      <li [class.active]="page === 'user-management'" (click)="setPage('user-management')">User Management</li>
-    </ul>
-  </aside>
-
-  <main class="main-content">
-    <!-- Dashboard Page -->
-    <section *ngIf="page === 'dashboard'" class="page active">
-      <div class="card">
-        <h2 class="card-title">Dashboard Overview</h2>
-        <p>Welcome to the Military Personnel Management System.</p>
-      </div>
-    </section>
-
-    <!-- Create User Page -->
-    <section *ngIf="page === 'create-user'" class="page">
-      <div class="card">
-        <h2 class="card-title">{{ editingUserId ? 'Edit User' : 'Create New User' }}</h2>
-
-        <div class="form-group">
-          <label>Username</label>
-          <input [(ngModel)]="username" type="text" placeholder="Enter username" />
-        </div>
-
-        <div class="form-group">
-          <label>Email</label>
-          <input [(ngModel)]="email" type="email" placeholder="Enter email" />
-        </div>
-
-        <div class="form-group">
-          <label>Password</label>
-          <input [(ngModel)]="password" type="password" placeholder="Enter password" />
-        </div>
-
-        <div class="form-group">
-          <label>Military Branch</label>
-          <div class="tab-container">
-            <div class="tabs">
-              <div
-                class="tab"
-                [class.active]="activeTab === 'army'"
-                (click)="setActiveTab('army')"
-              >
-                Army
-              </div>
-              <div
-                class="tab"
-                [class.active]="activeTab === 'navy'"
-                (click)="setActiveTab('navy')"
-              >
-                Navy
-              </div>
-              <div
-                class="tab"
-                [class.active]="activeTab === 'airforce'"
-                (click)="setActiveTab('airforce')"
-              >
-                Air Force
-              </div>
-            </div>
-
-            <div id="army" class="tab-content" *ngIf="activeTab === 'army'">
-              <div class="checkbox-group">
-                <div class="checkbox-item" *ngFor="let branch of (Object.keys(armyOptions))">
-                  <input
-                    type="checkbox"
-                    [id]="branch"
-                    [(ngModel)]="armyOptions[branch]"
-                    name="army"
-                  />
-                  <label [for]="branch">{{ branch }}</label>
-                </div>
-              </div>
-            </div>
-
-            <div id="navy" class="tab-content" *ngIf="activeTab === 'navy'">
-              <div class="checkbox-group">
-                <div class="checkbox-item" *ngFor="let branch of (Object.keys(navyOptions))">
-                  <input
-                    type="checkbox"
-                    [id]="branch"
-                    [(ngModel)]="navyOptions[branch]"
-                    name="navy"
-                  />
-                  <label [for]="branch">{{ branch }}</label>
-                </div>
-              </div>
-            </div>
-
-            <div id="airforce" class="tab-content" *ngIf="activeTab === 'airforce'">
-              <div class="checkbox-group">
-                <div class="checkbox-item" *ngFor="let branch of (Object.keys(airforceOptions))">
-                  <input
-                    type="checkbox"
-                    [id]="branch"
-                    [(ngModel)]="airforceOptions[branch]"
-                    name="airforce"
-                  />
-                  <label [for]="branch">{{ branch }}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button id="submit-btn" (click)="createUser()">
-          {{ editingUserId ? 'Update User' : 'Create User' }}
-        </button>
-      </div>
-    </section>
-
-    <!-- User Management Page -->
-    <section *ngIf="page === 'user-management'" class="page">
-      <div class="card">
-        <h2 class="card-title">User Management</h2>
-
-        <div *ngIf="loadingUsers">Loading users...</div>
-        <div *ngIf="noUsers && !loadingUsers">No users found.</div>
-
-        <table *ngIf="!loadingUsers && !noUsers" class="users-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Army Options</th>
-              <th>Navy Options</th>
-              <th>Air Force Options</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of users">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.armyOptions.join(', ') || '-' }}</td>
-              <td>{{ user.navyOptions.join(', ') || '-' }}</td>
-              <td>{{ user.airforceOptions.join(', ') || '-' }}</td>
-              <td>
-                <button (click)="editUser(user.id)">Edit</button>
-                <button (click)="deleteUser(user.id)">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-</div>
-
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" ng-app="MilitaryApp">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Military User Dashboard</title>
+    <!-- Include AngularJS (version 1.8.x for stability) -->
+  <script src="js/angular.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -611,7 +176,6 @@
             font-size: 16px;
         }
 
-        /* Users List Page Styles */
         .users-table {
             width: 100%;
             border-collapse: collapse;
@@ -697,221 +261,256 @@
                 overflow-x: auto;
             }
         }
-          #logout-btn {
-    background: #e76f51;
-    border: none;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  #logout-btn:hover {
-    background: #d65f44;
-  }
+
+        #logout-btn {
+            background: #e76f51;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #logout-btn:hover {
+            background: #d65f44;
+        }
     </style>
 </head>
-<body>
-  <div class="dashboard">
-    <header class="header">
-    <h1>Military Personnel Management</h1>
-  <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
-    <button id="logout-btn">Logout</button>
-    </div>
-</header>
-    <aside class="sidebar">
-      <ul class="sidebar-menu">
-        <li onclick="showPage('dashboard')" class="active">Dashboard</li>
-        <li onclick="showPage('create-user')">Create User</li>
-        <li onclick="showPage('user-management')">User Management</li>
-      </ul>
-    </aside>
-    <main class="main-content">
-      <div id="dashboard-page" class="page active">
-        <div class="card"><h2 class="card-title">Dashboard Overview</h2>
-          <p>Welcome to the Military Personnel Management System.</p>
-        </div>
-      </div>
-      <div id="create-user-page" class="page">
-        <div class="card">
-          <h2 class="card-title">Create New User</h2>
-          <div class="form-group"><label>Username</label><input id="username" type="username" placeholder="Enter username"></div>
-          <div class="form-group"><label>Email</label><input id="email" type="email" placeholder="Enter email"></div>
-          <div class="form-group"><label>Password</label><input id="password" type="password" placeholder="Enter password"></div>
-          <div class="form-group"><label>Military Branch</label>
-            <div class="tab-container">
-              <div class="tabs">
-                <div class="tab active" onclick="openTab(event,'army')">Army</div>
-                <div class="tab" onclick="openTab(event,'navy')">Navy</div>
-                <div class="tab" onclick="openTab(event,'airforce')">Air Force</div>
-              </div>
-              <div id="army" class="tab-content active">
-                <div class="checkbox-group">
-                  <div class="checkbox-item"><input type="checkbox" name="army" id="army1"><label for="army1">Infantry</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="army" id="army2"><label for="army2">Armored</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="army" id="army3"><label for="army3">Artillery</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="army" id="army4"><label for="army4">Engineers</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="army" id="army5"><label for="army5">Signals</label></div>
-                </div>
-              </div>
-              <div id="navy" class="tab-content">
-                <div class="checkbox-group">
-                  <div class="checkbox-item"><input type="checkbox" name="navy" id="navy1"><label for="navy1">Surface Fleet</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="navy" id="navy2"><label for="navy2">Submarine Service</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="navy" id="navy3"><label for="navy3">Naval Aviation</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="navy" id="navy4"><label for="navy4">Marines</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="navy" id="navy5"><label for="navy5">Special Forces</label></div>
-                </div>
-              </div>
-              <div id="airforce" class="tab-content">
-                <div class="checkbox-group">
-                  <div class="checkbox-item"><input type="checkbox" name="airforce" id="airforce1"><label for="airforce1">Fighter Command</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="airforce" id="airforce2"><label for="airforce2">Bomber Command</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="airforce" id="airforce3"><label for="airforce3">Reconnaissance</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="airforce" id="airforce4"><label for="airforce4">Transport</label></div>
-                  <div class="checkbox-item"><input type="checkbox" name="airforce" id="airforce5"><label for="airforce5">Air Defense</label></div>
-                </div>
-              </div>
+<body ng-controller="DashboardCtrl">
+    <div class="dashboard">
+        <header class="header">
+            <h1>Military Personnel Management</h1>
+            <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
+                <button id="logout-btn" ng-click="logout()">Logout</button>
             </div>
-          </div>
-          <button class="btn" onclick="createUser()">Create User</button>
-        </div>
-      </div>
-      <div id="user-management-page" class="page">
-        <div class="card">
-          <h2 class="card-title">User Management</h2>
-          <div id="users-list-container"></div>
-        </div>
-      </div>
-    </main>
-  </div>
+        </header>
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li ng-class="{active: currentPage === 'dashboard'}" ng-click="showPage('dashboard')">Dashboard</li>
+                <li ng-class="{active: currentPage === 'create-user'}" ng-click="showPage('create-user')">Create User</li>
+                <li ng-class="{active: currentPage === 'user-management'}" ng-click="showPage('user-management')">User Management</li>
+            </ul>
+        </aside>
+        <main class="main-content">
+            <div id="dashboard-page" class="page" ng-class="{active: currentPage === 'dashboard'}">
+                <div class="card">
+                    <h2 class="card-title">Dashboard Overview</h2>
+                    <p>Welcome to the Military Personnel Management System.</p>
+                </div>
+            </div>
+            <div id="create-user-page" class="page" ng-class="{active: currentPage === 'create-user'}">
+                <div class="card">
+                    <h2 class="card-title">{{ editingUserId ? 'Edit User' : 'Create New User' }}</h2>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="username" ng-model="newUser.name" placeholder="Enter username">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" ng-model="newUser.email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" ng-model="newUser.password" placeholder="Enter password">
+                    </div>
+                    <div class="form-group">
+                        <label>Military Branch</label>
+                        <div class="tab-container">
+                            <div class="tabs">
+                                <div class="tab" ng-class="{active: currentTab === 'army'}" ng-click="openTab('army')">Army</div>
+                                <div class="tab" ng-class="{active: currentTab === 'navy'}" ng-click="openTab('navy')">Navy</div>
+                                <div class="tab" ng-class="{active: currentTab === 'airforce'}" ng-click="openTab('airforce')">Air Force</div>
+                            </div>
+                            <div id="army" class="tab-content" ng-class="{active: currentTab === 'army'}">
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item" ng-repeat="option in armyOptions">
+                                        <input type="checkbox" ng-model="newUser.armyOptions[option]" id="army{{$index}}">
+                                        <label for="army{{$index}}">{{option}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="navy" class="tab-content" ng-class="{active: currentTab === 'navy'}">
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item" ng-repeat="option in navyOptions">
+                                        <input type="checkbox" ng-model="newUser.navyOptions[option]" id="navy{{$index}}">
+                                        <label for="navy{{$index}}">{{option}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="airforce" class="tab-content" ng-class="{active: currentTab === 'airforce'}">
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item" ng-repeat="option in airforceOptions">
+                                        <input type="checkbox" ng-model="newUser.airforceOptions[option]" id="airforce{{$index}}">
+                                        <label for="airforce{{$index}}">{{option}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn" ng-click="createUser()">{{ editingUserId ? 'Update User' : 'Create User' }}</button>
+                </div>
+            </div>
+            <div id="user-management-page" class="page" ng-class="{active: currentPage === 'user-management'}">
+                <div class="card">
+                    <h2 class="card-title">User Management</h2>
+                    <div id="users-list-container">
+                        <div class="no-users" ng-if="!users || users.length === 0">No users available.</div>
+                        <table class="users-table" ng-if="users.length > 0">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Branches</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="user in users">
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.email}}</td>
+                                    <td>
+                                        <span class="branch-tag army-tag" ng-repeat="opt in user.armyOptions">{{opt}}</span>
+                                        <span class="branch-tag navy-tag" ng-repeat="opt in user.navyOptions">{{opt}}</span>
+                                        <span class="branch-tag airforce-tag" ng-repeat="opt in user.airforceOptions">{{opt}}</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn" ng-click="editUser(user.id)">Edit</button>
+                                        <button class="btn" style="background-color:#f44336" ng-click="deleteUser(user.id)">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-  <script>
-    let editingUserId = null;
+    <script>
+        angular.module('MilitaryApp', [])
+            .controller('DashboardCtrl', ['$scope', '$http', function($scope, $http) {
+                // Initialize scope variables
+                $scope.currentPage = 'dashboard';
+                $scope.currentTab = 'army';
+                $scope.editingUserId = null;
+                $scope.newUser = {
+                    name: '',
+                    email: '',
+                    password: '',
+                    armyOptions: {},
+                    navyOptions: {},
+                    airforceOptions: {}
+                };
+                $scope.users = [];
+                $scope.armyOptions = ['Infantry', 'Armored', 'Artillery', 'Engineers', 'Signals'];
+                $scope.navyOptions = ['Surface Fleet', 'Submarine Service', 'Naval Aviation', 'Marines', 'Special Forces'];
+                $scope.airforceOptions = ['Fighter Command', 'Bomber Command', 'Reconnaissance', 'Transport', 'Air Defense'];
 
-    function openTab(evt, tabName) {
-      document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.getElementById(tabName).classList.add('active');
-      evt.currentTarget.classList.add('active');
-    }
+                // Page navigation
+                $scope.showPage = function(pageId) {
+                    $scope.currentPage = pageId;
+                    if (pageId === 'user-management') {
+                        $scope.displayUsers();
+                    }
+                    if (pageId === 'create-user' && !$scope.editingUserId) {
+                        $scope.clearForm();
+                    }
+                };
 
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId + '-page').classList.add('active');
-      document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
-      document.querySelector(`.sidebar-menu li[onclick="showPage('${pageId}')"]`).classList.add('active');
-      if (pageId === 'user-management') displayUsers();
-    }
+                // Tab switching
+                $scope.openTab = function(tabName) {
+                    $scope.currentTab = tabName;
+                };
 
-    function clearForm() {
-      editingUserId = null;
-      document.getElementById('username').value = '';
-      document.getElementById('email').value = '';
-      document.getElementById('password').value = '';
-      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-    }
+                // Clear form
+                $scope.clearForm = function() {
+                    $scope.editingUserId = null;
+                    $scope.newUser = {
+                        name: '',
+                        email: '',
+                        password: '',
+                        armyOptions: {},
+                        navyOptions: {},
+                        airforceOptions: {}
+                    };
+                };
 
-    function createUser() {
-      const username = document.getElementById('username').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      if (!username || !email || !password) { alert('Please fill in all required fields'); return; }
+                // Create or update user
+                $scope.createUser = function() {
+                    if (!$scope.newUser.name || !$scope.newUser.email || !$scope.newUser.password) {
+                        alert('Please fill in all required fields');
+                        return;
+                    }
 
-      const armyOptions = Array.from(document.querySelectorAll('input[name="army"]:checked')).map(cb => cb.nextElementSibling.textContent);
-      const navyOptions = Array.from(document.querySelectorAll('input[name="navy"]:checked')).map(cb => cb.nextElementSibling.textContent);
-      const airforceOptions = Array.from(document.querySelectorAll('input[name="airforce"]:checked')).map(cb => cb.nextElementSibling.textContent);
+                    // Convert checkbox objects to arrays
+                    var user = {
+                        name: $scope.newUser.name,
+                        email: $scope.newUser.email,
+                        password: $scope.newUser.password,
+                        armyOptions: Object.keys($scope.newUser.armyOptions).filter(key => $scope.newUser.armyOptions[key]),
+                        navyOptions: Object.keys($scope.newUser.navyOptions).filter(key => $scope.newUser.navyOptions[key]),
+                        airforceOptions: Object.keys($scope.newUser.airforceOptions).filter(key => $scope.newUser.airforceOptions[key])
+                    };
 
-      const user = { name: username, email, password, armyOptions, navyOptions, airforceOptions };
-      const method = editingUserId ? 'PUT' : 'POST';
-      const url = editingUserId ? `/api/users/${editingUserId}` : '/api/users';
+                    var method = $scope.editingUserId ? 'PUT' : 'POST';
+                    var url = $scope.editingUserId ? '/api/users/' + $scope.editingUserId : '/api/users';
 
-      fetch(url, {
-        method,
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(user)
-      })
-      .then(res => res.json())
-      .then(() => {
-        alert(editingUserId ? 'User updated' : 'User created');
-        clearForm();
-        showPage('user-management');
-      });
-    }
+                    $http({
+                        method: method,
+                        url: url,
+                        data: user
+                    }).then(function() {
+                        alert($scope.editingUserId ? 'User updated' : 'User created');
+                        $scope.clearForm();
+                        $scope.showPage('user-management');
+                    });
+                };
 
-    function displayUsers() {
-      fetch('/api/users')
-        .then(res => res.json())
-        .then(users => {
-          const container = document.getElementById('users-list-container');
-          if (users.length === 0) {
-            container.innerHTML = '<div class="no-users">No users available.</div>';
-            return;
-          }
-          const rows = users.map(u => `
-            <tr>
-              <td>${u.name}</td>
-              <td>${u.email}</td>
-              <td>
-                ${(u.armyOptions||[]).map(o=>`<span class="branch-tag army-tag">${o}</span>`).join('')}
-                ${(u.navyOptions||[]).map(o=>`<span class="branch-tag navy-tag">${o}</span>`).join('')}
-                ${(u.airforceOptions||[]).map(o=>`<span class="branch-tag airforce-tag">${o}</span>`).join('')}
-              </td>
-              <td>
-                <button class="btn" onclick="editUser(${u.id})">Edit</button>
-                <button class="btn" style="background-color:#f44336" onclick="deleteUser(${u.id})">Delete</button>
-              </td>
-            </tr>
-          `).join('');
-          container.innerHTML = `
-            <table class="users-table">
-              <thead><tr><th>Username</th><th>Email</th><th>Branches</th><th>Actions</th></tr></thead>
-              <tbody>${rows}</tbody>
-            </table>`;
-        });
-    }
+                // Display users
+                $scope.displayUsers = function() {
+                    $http.get('/api/users').then(function(response) {
+                        $scope.users = response.data;
+                    });
+                };
 
-    function deleteUser(id) {
-      if (!confirm('Are you sure you want to delete this user?')) return;
-      fetch(`/api/users/${id}`, { method:'DELETE' })
-        .then(() => displayUsers());
-    }
+                // Delete user
+                $scope.deleteUser = function(id) {
+                    if (!confirm('Are you sure you want to delete this user?')) return;
+                    $http.delete('/api/users/' + id).then(function() {
+                        $scope.displayUsers();
+                    });
+                };
 
-    function editUser(id) {
-      fetch('/api/users')
-        .then(res => res.json())
-        .then(users => {
-          const u = users.find(x => x.id === id);
-          if (!u) return;
-          editingUserId = id;
-          document.getElementById('username').value = u.name;
-          document.getElementById('email').value = u.email;
-          document.getElementById('password').value = '';
-          document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-          (u.armyOptions||[]).forEach(opt => {
-            const cb = Array.from(document.querySelectorAll('input[name="army"]'))
-                            .find(c=>c.nextElementSibling.textContent.trim()===opt);
-            if(cb) cb.checked = true;
-          });
-          (u.navyOptions||[]).forEach(opt => {
-            const cb = Array.from(document.querySelectorAll('input[name="navy"]'))
-                            .find(c=>c.nextElementSibling.textContent.trim()===opt);
-            if(cb) cb.checked = true;
-          });
-          (u.airforceOptions||[]).forEach(opt => {
-            const cb = Array.from(document.querySelectorAll('input[name="airforce"]'))
-                            .find(c=>c.nextElementSibling.textContent.trim()===opt);
-            if(cb) cb.checked = true;
-          });
-          showPage('create-user');
-        });
-    }
+                // Edit user
+                $scope.editUser = function(id) {
+                    $http.get('/api/users').then(function(response) {
+                        var user = response.data.find(function(u) { return u.id === id; });
+                        if (!user) return;
+                        $scope.editingUserId = id;
+                        $scope.newUser = {
+                            name: user.name,
+                            email: user.email,
+                            password: '',
+                            armyOptions: {},
+                            navyOptions: {},
+                            airforceOptions: {}
+                        };
+                        (user.armyOptions || []).forEach(function(opt) { $scope.newUser.armyOptions[opt] = true; });
+                        (user.navyOptions || []).forEach(function(opt) { $scope.newUser.navyOptions[opt] = true; });
+                        (user.airforceOptions || []).forEach(function(opt) { $scope.newUser.airforceOptions[opt] = true; });
+                        $scope.showPage('create-user');
+                    });
+                };
 
-    window.onload = () => displayUsers();
+                // Logout
+                $scope.logout = function() {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                };
 
-  document.getElementById("logout-btn").addEventListener("click", () => {
-    localStorage.removeItem("currentUser");
-  window.location.href = "index.html";  
-  });
-  </script>
+                // Initial load
+                $scope.displayUsers();
+            }]);
+    </script>
 </body>
-</html> -->
+</html>

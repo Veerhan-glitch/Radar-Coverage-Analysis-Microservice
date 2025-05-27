@@ -1,645 +1,431 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="userDashApp">
+<html lang="en" ng-app="MilitaryApp">
 <head>
   <meta charset="UTF-8" />
   <title>User Dashboard</title>
   <script src="js/angular.min.js"></script>
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    .dashboard {
       display: grid;
-      grid-template-columns: 220px 1fr;
-      grid-template-rows: 50px 1fr;
       grid-template-areas:
-        "header header"
-        "sidebar main";
+          "header header header"
+          "sidebar main main"
+          "sidebar main main";
+      grid-template-columns: 250px 1fr 1fr;
+      grid-template-rows: 80px 1fr;
       height: 100vh;
     }
-    header {
+
+    .header {
       grid-area: header;
-      background: #333;
+      background-color: #1a237e;
       color: white;
       display: flex;
       align-items: center;
-      padding: 0 20px;
       justify-content: space-between;
+      padding: 0 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
-    aside {
-      grid-area: sidebar;
-      background: #444;
-      color: white;
-      overflow-y: auto;
-      padding: 10px;
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 500;
     }
-    main {
-      grid-area: main;
-      padding: 20px;
-      overflow-y: auto;
+
+    .header .user-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 16px;
     }
-    .branch {
+
+    .header .username {
+      font-weight: 600;
+    }
+
+    .btn-logout {
+      background-color: #00bcd4;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
       cursor: pointer;
-      padding: 6px 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-      border-radius: 3px;
+      font-weight: 600;
+      color: #1a237e;
+      transition: background-color 0.3s;
     }
-    .branch:hover {
-      background: #555;
+
+    .btn-logout:hover {
+      background-color: #0097a7;
+      color: white;
     }
-    .powers-list {
-      margin: 0 0 10px 15px;
-      padding: 0;
+
+    .sidebar {
+      grid-area: sidebar;
+      background-color: #283593;
+      color: white;
+      padding: 20px 0;
+    }
+
+    .sidebar-menu {
       list-style: none;
-      display: none;
     }
-    .powers-list.show {
+
+    .sidebar-menu li {
+      padding: 15px 30px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .sidebar-menu li:hover {
+      background-color: #3949ab;
+    }
+
+    .sidebar-menu li.active {
+      background-color: #3949ab;
+      border-left: 4px solid #00bcd4;
+    }
+
+    .main-content {
+      grid-area: main;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .card-title {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #1a237e;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .tab-container {
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #f1f1f1;
+      margin-right: 5px;
+      border-radius: 5px 5px 0 0;
+    }
+
+    .tab.active {
+      background-color: #1a237e;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px 0;
+    }
+
+    .tab-content.active {
       display: block;
     }
-    .powers-list li {
-      padding: 4px 8px;
+
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox-item input {
+      margin-right: 10px;
+    }
+
+    .btn {
+      background-color: #1a237e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
       cursor: pointer;
-      border-radius: 3px;
+      font-size: 16px;
+      transition: background-color 0.3s;
     }
-    .powers-list li:hover {
-      background: #666;
+
+    .btn:hover {
+      background-color: #283593;
     }
-    button.power-btn {
-      margin: 5px 5px 5px 0;
-      padding: 8px 15px;
-      background: #007bff;
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input[type="username"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .users-table th, .users-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .users-table th {
+      background-color: #1a237e;
+      color: white;
+      font-weight: 500;
+    }
+
+    .users-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .users-table tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .branch-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .army-tag {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .navy-tag {
+      background-color: #2196f3;
+      color: white;
+    }
+
+    .airforce-tag {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .no-users {
+      text-align: center;
+      padding: 30px;
+      color: #666;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        grid-template-areas:
+            "header"
+            "main"
+            "sidebar";
+        grid-template-columns: 1fr;
+        grid-template-rows: 80px 1fr auto;
+      }
+
+      .sidebar {
+        padding: 10px 0;
+      }
+
+      .sidebar-menu {
+        display: flex;
+        overflow-x: auto;
+      }
+
+      .sidebar-menu li {
+        white-space: nowrap;
+        padding: 10px 15px;
+      }
+
+      .users-table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+
+    #username {
+      font-weight: bold;
+    }
+
+    #logout-btn {
+      background: #e76f51;
       border: none;
       color: white;
-      cursor: pointer;
+      padding: 6px 12px;
       border-radius: 4px;
+      cursor: pointer;
     }
-    button.power-btn:hover {
-      background: #0056b3;
+
+    #logout-btn:hover {
+      background: #d65f44;
     }
-    iframe {
-      width: 100%;
-      height: 70vh;
+
+    .power-btn {
+      display: inline-block;
+      margin: 6px 8px 6px 0;
+      padding: 10px 16px;
+      background-color: #2a9d8f;
+      color: white;
       border: none;
-      margin-top: 10px;
-      border-radius: 6px;
-      box-shadow: 0 0 10px #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+      text-align: center;
+      user-select: none;
+      box-shadow: 0 3px 6px rgba(42, 157, 143, 0.4);
+    }
+
+    .power-btn:hover {
+      background-color: #21867a;
+    }
+
+    .power-btn:focus {
+      outline: 2px solid #264653;
+      outline-offset: 2px;
     }
   </style>
 </head>
-<body ng-controller="UserDashController as ctrl">
-  <header>
-    <div>Welcome, {{ ctrl.user.name || 'Guest' }}</div>
-    <button ng-click="ctrl.logout()">Logout</button>
-  </header>
-
-  <aside>
-    <div ng-repeat="branch in ctrl.branches">
-      <div class="branch" ng-click="ctrl.selectBranch(branch)" >
-        <span>{{ branch.name | capitalize }}</span>
-        <span ng-click="$event.stopPropagation(); ctrl.toggleDropdown(branch)" style="user-select:none; cursor:pointer;">
-          {{ branch.expanded ? '▼' : '▶' }}
-        </span>
-      </div>
-      <ul class="powers-list" ng-class="{show: branch.expanded}">
-        <li ng-repeat="power in branch.powers" ng-click="ctrl.loadPower(branch.name, power)">
-          {{ power }}
-        </li>
-      </ul>
-    </div>
-  </aside>
-
-  <main>
-    <div ng-if="!ctrl.selectedBranch">
-      <h2>Welcome</h2>
-      <p>Select a branch to see powers.</p>
-    </div>
-
-    <div ng-if="ctrl.selectedBranch">
-      <h2>{{ ctrl.selectedBranch.name | capitalize }} Powers</h2>
-      <div>
-        <button class="power-btn" ng-repeat="power in ctrl.selectedBranch.powers" ng-click="ctrl.loadPower(ctrl.selectedBranch.name, power)">
-          {{ power }}
-        </button>
-      </div>
-      <iframe ng-if="ctrl.selectedPower" ng-src="{{ ctrl.powerUrl }}" sandbox></iframe>
-    </div>
-  </main>
-
-  <script>
-    angular.module('userDashApp', [])
-      .filter('capitalize', function () {
-        return function (input) {
-          if (!input) return '';
-          return input.charAt(0).toUpperCase() + input.slice(1);
-        };
-      })
-      .controller('UserDashController', ['$sce', '$window', function ($sce, $window) {
-        var vm = this;
-
-        // Load user from localStorage or fallback
-        vm.user = JSON.parse(localStorage.getItem('currentUser')) || {
-          name: 'Guest',
-          armyOptions: ['Infantry', 'Tank Division', 'Artillery'],
-          navyOptions: ['Submarine', 'Destroyer', 'Carrier'],
-          airforceOptions: ['Fighter Jets', 'Bombers', 'Helicopters']
-        };
-
-        // Branches data
-        vm.branches = [
-          { name: 'army', powers: vm.user.armyOptions || [], expanded: false },
-          { name: 'navy', powers: vm.user.navyOptions || [], expanded: false },
-          { name: 'airforce', powers: vm.user.airforceOptions || [], expanded: false }
-        ];
-
-        vm.selectedBranch = null;
-        vm.selectedPower = null;
-        vm.powerUrl = null;
-
-        // Toggle dropdown arrow
-        vm.toggleDropdown = function(branch) {
-          branch.expanded = !branch.expanded;
-        };
-
-        // Clicking branch name shows powers in main area and collapses dropdowns
-        vm.selectBranch = function(branch) {
-          vm.selectedBranch = branch;
-          vm.selectedPower = null;
-          vm.powerUrl = null;
-          // close all dropdowns except this branch
-          vm.branches.forEach(b => {
-            if (b !== branch) b.expanded = false;
-          });
-        };
-
-        // Load power iframe url
-        vm.loadPower = function(branchName, powerName) {
-          vm.selectedPower = powerName;
-          var url = branchName + '/' + encodeURIComponent(powerName) + '.html';
-          vm.powerUrl = $sce.trustAsResourceUrl(url);
-        };
-
-        vm.logout = function() {
-          localStorage.removeItem('currentUser');
-          $window.location.href = 'index.html';
-        };
-      }]);
-  </script>
-</body>
-</html>
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>User Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-areas:
-                "header header header"
-                "sidebar main main"
-                "sidebar main main";
-            grid-template-columns: 250px 1fr 1fr;
-            grid-template-rows: 80px 1fr;
-            height: 100vh;
-        }
-
-        .header {
-            grid-area: header;
-            background-color: #1a237e;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .header h1 {
-            font-size: 24px;
-            font-weight: 500;
-        }
-
-        .header .user-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            font-size: 16px;
-        }
-
-        .header .username {
-            font-weight: 600;
-        }
-
-        .btn-logout {
-            background-color: #00bcd4;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #1a237e;
-            transition: background-color 0.3s;
-        }
-
-        .btn-logout:hover {
-            background-color: #0097a7;
-            color: white;
-        }
-
-        .sidebar {
-            grid-area: sidebar;
-            background-color: #283593;
-            color: white;
-            padding: 20px 0;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            padding: 15px 30px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar-menu li:hover {
-            background-color: #3949ab;
-        }
-
-        .sidebar-menu li.active {
-            background-color: #3949ab;
-            border-left: 4px solid #00bcd4;
-        }
-
-        .main-content {
-            grid-area: main;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card-title {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #1a237e;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .tab-container {
-            margin-bottom: 20px;
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            background-color: #f1f1f1;
-            margin-right: 5px;
-            border-radius: 5px 5px 0 0;
-        }
-
-        .tab.active {
-            background-color: #1a237e;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 20px 0;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-item input {
-            margin-right: 10px;
-        }
-
-        .btn {
-            background-color: #1a237e;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #283593;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-group input[type="username"],
-        .form-group input[type="email"],
-        .form-group input[type="password"],
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        /* Users List Page Styles */
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .users-table th, .users-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .users-table th {
-            background-color: #1a237e;
-            color: white;
-            font-weight: 500;
-        }
-
-        .users-table tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .users-table tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        .branch-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-
-        .army-tag {
-            background-color: #4caf50;
-            color: white;
-        }
-
-        .navy-tag {
-            background-color: #2196f3;
-            color: white;
-        }
-
-        .airforce-tag {
-            background-color: #f44336;
-            color: white;
-        }
-
-        .no-users {
-            text-align: center;
-            padding: 30px;
-            color: #666;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-areas:
-                    "header"
-                    "main"
-                    "sidebar";
-                grid-template-columns: 1fr;
-                grid-template-rows: 80px 1fr auto;
-            }
-
-            .sidebar {
-                padding: 10px 0;
-            }
-
-            .sidebar-menu {
-                display: flex;
-                overflow-x: auto;
-            }
-
-            .sidebar-menu li {
-                white-space: nowrap;
-                padding: 10px 15px;
-            }
-
-            .users-table {
-                display: block;
-                overflow-x: auto;
-            }
-        }
-          #username {
-    font-weight: bold;
-  }
-  #logout-btn {
-    background: #e76f51;
-    border: none;
-    color: white;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  #logout-btn:hover {
-    background: #d65f44;
-  }
-  .power-btn {
-  display: inline-block;
-  margin: 6px 8px 6px 0;
-  padding: 10px 16px;
-  background-color: #2a9d8f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: background-color 0.3s ease;
-  text-align: center;
-  user-select: none;
-  box-shadow: 0 3px 6px rgba(42, 157, 143, 0.4);
-}
-
-.power-btn:hover {
-  background-color: #21867a;
-}
-
-.power-btn:focus {
-  outline: 2px solid #264653;
-  outline-offset: 2px;
-}
-
-    </style>
-</head>
-<body>
+<body ng-controller="DashboardCtrl">
   <div class="dashboard">
-<header class="header">
-    <h1>User Dashboard</h1>
-  <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
-  <div>Welcome, <span id="username">User</span></div>
-    <button id="logout-btn">Logout</button>
-    </div>
-</header>
-
+    <header class="header">
+      <h1>User Dashboard</h1>
+      <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
+        <div>Welcome, <span id="username" ng-bind="user.name || 'Guest'"></span></div>
+        <button id="logout-btn" ng-click="logout()">Logout</button>
+      </div>
+    </header>
 
     <aside class="sidebar">
       <ul class="sidebar-menu">
-        <li>
-          <div onclick="showBranch('army')" onclick="showCategory('army')" style="display: flex; justify-content: space-between; align-items: center;" >
-            <span class="title" onclick="showCategory('army')">Army</span>
-            <span onclick="event.stopPropagation(); toggleDropdown('army')">▸</span>
+        <li ng-repeat="branch in branches">
+          <div ng-click="showBranch(branch)" style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="title">{{branch | capitalize}}</span>
+            <span ng-click="toggleDropdown(branch); $event.stopPropagation()">▸</span>
           </div>
-          <ul id="army-dropdown" class="sidebar-menu" style="display: none; padding-left: 15px;"></ul>
-        </li>
-        <li>
-          <div onclick="showBranch('navy')" style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="title" onclick="showCategory('navy')">Navy</span>
-            <span onclick="event.stopPropagation(); toggleDropdown('navy')">▸</span>
-          </div>
-          <ul id="navy-dropdown" class="sidebar-menu" style="display: none; padding-left: 15px;"></ul>
-        </li>
-        <li>
-          <div onclick="showBranch('airforce')" style="display: flex; justify-content: space-between; align-items: center;">
-            <span class="title" onclick="showCategory('airforce')">airforce</span>
-            <span onclick="event.stopPropagation(); toggleDropdown('airforce')">▸</span>
-          </div>
-          <ul id="airforce-dropdown" class="sidebar-menu" style="display: none; padding-left: 15px;"></ul>
+          <ul class="sidebar-menu" ng-show="dropdowns[branch]" style="padding-left: 15px;">
+            <li ng-repeat="power in powers[branch]" ng-click="loadPage(branch, power)" style="cursor: pointer;">
+              {{power}}
+            </li>
+          </ul>
         </li>
       </ul>
     </aside>
 
     <main class="main-content" id="main-content">
-      <div class="card">
+      <div class="card" ng-if="!selectedBranch">
         <h2 class="card-title">Welcome</h2>
         <p>Select a branch or power to get started.</p>
       </div>
+      <div class="card" ng-if="selectedBranch && !selectedPower">
+        <h2 class="card-title">{{selectedBranch | capitalize}} Powers</h2>
+        <div>
+          <button class="power-btn" ng-repeat="power in powers[selectedBranch]" ng-click="loadPage(selectedBranch, power)">{{power}}</button>
+          <p ng-if="!powers[selectedBranch].length">No powers assigned.</p>
+        </div>
+      </div>
+      <iframe class="card" ng-if="selectedPower" ng-src="{{iframeSrc}}" style="width:100%;height:70vh;border:none;"></iframe>
     </main>
   </div>
 
-<script>
-  const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
-  const powers = {
-    army: user.armyOptions || [],
-    navy: user.navyOptions || [],
-    airforce: user.airforceOptions || []
-  };
+  <script>
+    angular.module('MilitaryApp', [])
+      .controller('DashboardCtrl', ['$scope', '$sce', function($scope, $sce) {
+        // Initialize user data from localStorage
+        $scope.user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        $scope.branches = ['army', 'navy', 'airforce'];
+        $scope.powers = {
+          army: $scope.user.armyOptions || [],
+          navy: $scope.user.navyOptions || [],
+          airforce: $scope.user.airforceOptions || []
+        };
+        $scope.dropdowns = { army: false, navy: false, airforce: false };
+        $scope.selectedBranch = null;
+        $scope.selectedPower = null;
+        $scope.iframeSrc = '';
 
+        // Capitalize filter
+        $scope.$filter = function(str) {
+          return str.charAt(0).toUpperCase() + str.slice(1);
+        };
 
-// Set username in header
-const usernameElem = document.getElementById("username");
-usernameElem.textContent = user.name || "Guest";
+        // Toggle dropdown visibility
+        $scope.toggleDropdown = function(branch) {
+          $scope.dropdowns[branch] = !$scope.dropdowns[branch];
+        };
 
-  document.getElementById("logout-btn").addEventListener("click", () => {
-    localStorage.removeItem("currentUser");
-  window.location.href = "index.html";  // Redirect to index page after logout
-  });
+        // Show branch powers
+        $scope.showBranch = function(branch) {
+          $scope.selectedBranch = branch;
+          $scope.selectedPower = null;
+          $scope.iframeSrc = '';
+        };
 
-  function toggleDropdown(branch) {
-    const dropdown = document.getElementById(`${branch}-dropdown`);
-    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-  }
+        // Load iframe for selected power
+        $scope.loadPage = function(branch, power) {
+          $scope.selectedBranch = branch;
+          $scope.selectedPower = power;
+          $scope.iframeSrc = $sce.trustAsResourceUrl(`${branch}/${encodeURIComponent(power)}.html`);
+        };
 
-  // Show buttons for powers in main content when clicking category name
-  function showBranch(branch) {
-    const list = powers[branch] || [];
-    const content = document.getElementById("main-content");
-
-    // Create buttons for each power
-    const buttonsHTML = list.length === 0 
-      ? "<p>No powers assigned.</p>" 
-      : list.map(p => `<button class="power-btn" onclick="loadPage('${branch}', '${p}')">${p}</button>`).join("");
-
-    content.innerHTML = `
-      <div class="card">
-        <h2 class="card-title">${capitalize(branch)} Powers</h2>
-        <div>${buttonsHTML}</div>
-      </div>
-    `;
-  }
-
-  function loadPage(branch, power) {
-    const content = document.getElementById("main-content");
-    content.innerHTML = `
-      <iframe class="card" src="${branch}/${encodeURIComponent(power)}.html" style="width:100%;height:70vh;border:none;"></iframe>
-    `;
-  }
-
-  function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
-  function populateDropdowns() {
-    ["army", "navy", "airforce"].forEach(branch => {
-      const list = powers[branch];
-      const ul = document.getElementById(`${branch}-dropdown`);
-      ul.innerHTML = ""; // Clear old list first
-      list.forEach(p => {
-        const li = document.createElement("li");
-        li.textContent = p;
-        li.style.cursor = "pointer";
-        li.onclick = () => loadPage(branch, p);
-        ul.appendChild(li);
+        // Logout
+        $scope.logout = function() {
+          localStorage.removeItem('currentUser');
+          window.location.href = 'index.html';
+        };
+      }])
+      .filter('capitalize', function() {
+        return function(input) {
+          if (!input) return input;
+          return input.charAt(0).toUpperCase() + input.slice(1);
+        };
       });
-    });
-  }
-
-  populateDropdowns();
-</script>
-
-
+  </script>
 </body>
 </html>
- -->
