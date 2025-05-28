@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>task1</name>
+	<name>RoleBasedUsersManagementSystem</name>
 	<comment>Parent pom providing dependency and plugin management for applications built with Maven. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
 	<projects>
 	</projects>
@@ -22,7 +22,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1748273002737</id>
+			<id>0</id>
 			<name></name>
 			<type>30</type>
 			<matcher>

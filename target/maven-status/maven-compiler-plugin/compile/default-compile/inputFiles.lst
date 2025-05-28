@@ -1,5 +1,5 @@
-/home/prav/Desktop/dbdas/task1/src/main/java/com/example/task1/model/User.java
-/home/prav/Desktop/dbdas/task1/src/main/java/com/example/task1/repository/UserRepository.java
-/home/prav/Desktop/dbdas/task1/src/main/java/com/example/task1/service/UserService.java
-/home/prav/Desktop/dbdas/task1/src/main/java/com/example/task1/controller/LoginController.java
-/home/prav/Desktop/dbdas/task1/src/main/java/com/example/task1/Task1Application.java
+/home/prav/Desktop/dbdas/task1/src/main/java/com/trainee/prototype25/service/UserService.java
+/home/prav/Desktop/dbdas/task1/src/main/java/com/trainee/prototype25/controller/LoginController.java
+/home/prav/Desktop/dbdas/task1/src/main/java/com/trainee/prototype25/TraineeApplication.java
+/home/prav/Desktop/dbdas/task1/src/main/java/com/trainee/prototype25/model/User.java
+/home/prav/Desktop/dbdas/task1/src/main/java/com/trainee/prototype25/repository/UserRepository.java

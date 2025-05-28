@@ -1,4 +1,4 @@
-package com.example.task1.controller;
+package com.trainee.prototype25.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.task1.model.User;
-import com.example.task1.service.UserService;
+import com.trainee.prototype25.model.User;
+import com.trainee.prototype25.service.UserService;
 
 @RestController
 @RequestMapping("/api")

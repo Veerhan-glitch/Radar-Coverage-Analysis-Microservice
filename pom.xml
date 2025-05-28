@@ -4,8 +4,9 @@
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.example</groupId>
-  <artifactId>task1</artifactId>
+  <groupId>com.trainee</groupId>
+  <artifactId>prototype25</artifactId>
+  <name>RoleBasedUsersManagementSystem</name>
   <version>1.0.0</version>
   <packaging>jar</packaging>
 

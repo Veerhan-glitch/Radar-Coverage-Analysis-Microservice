@@ -1,4 +1,4 @@
-package com.example.task1.model;
+package com.trainee.prototype25.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

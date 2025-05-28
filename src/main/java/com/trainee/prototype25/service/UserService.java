@@ -1,9 +1,10 @@
-package com.example.task1.service;
+package com.trainee.prototype25.service;
 
-import com.example.task1.model.User;
-import com.example.task1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.trainee.prototype25.model.User;
+import com.trainee.prototype25.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
