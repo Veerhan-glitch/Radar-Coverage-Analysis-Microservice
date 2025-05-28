@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="MilitaryApp">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Military User Dashboard</title>
-    <!-- Include AngularJS (version 1.8.x for stability) -->
-  <script src="js/angular.min.js"></script>
+    <title>Role Based Users Management System</title>
+    <script src="js/angular.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -37,7 +37,7 @@
             display: flex;
             align-items: center;
             padding: 0 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .header h1 {
@@ -80,7 +80,7 @@
         .card {
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 25px;
             margin-bottom: 30px;
         }
@@ -182,7 +182,8 @@
             margin-top: 20px;
         }
 
-        .users-table th, .users-table td {
+        .users-table th,
+        .users-table td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #ddd;
@@ -276,10 +277,11 @@
         }
     </style>
 </head>
+
 <body ng-controller="DashboardCtrl">
     <div class="dashboard">
         <header class="header">
-            <h1>Military Personnel Management</h1>
+            <h1>Role Based Users Management System</h1>
             <div style="margin-left:auto; display:flex; align-items:center; gap:15px;">
                 <button id="logout-btn" ng-click="logout()">Logout</button>
             </div>
@@ -287,15 +289,17 @@
         <aside class="sidebar">
             <ul class="sidebar-menu">
                 <li ng-class="{active: currentPage === 'dashboard'}" ng-click="showPage('dashboard')">Dashboard</li>
-                <li ng-class="{active: currentPage === 'create-user'}" ng-click="showPage('create-user')">Create User</li>
-                <li ng-class="{active: currentPage === 'user-management'}" ng-click="showPage('user-management')">User Management</li>
+                <li ng-class="{active: currentPage === 'create-user'}" ng-click="showPage('create-user')">Create User
+                </li>
+                <li ng-class="{active: currentPage === 'user-management'}" ng-click="showPage('user-management')">User
+                    Management</li>
             </ul>
         </aside>
         <main class="main-content">
             <div id="dashboard-page" class="page" ng-class="{active: currentPage === 'dashboard'}">
                 <div class="card">
                     <h2 class="card-title">Dashboard Overview</h2>
-                    <p>Welcome to the Military Personnel Management System.</p>
+                    <p>Welcome to the Role Based Users Management System.</p>
                 </div>
             </div>
             <div id="create-user-page" class="page" ng-class="{active: currentPage === 'create-user'}">
@@ -317,14 +321,18 @@
                         <label>Military Branch</label>
                         <div class="tab-container">
                             <div class="tabs">
-                                <div class="tab" ng-class="{active: currentTab === 'army'}" ng-click="openTab('army')">Army</div>
-                                <div class="tab" ng-class="{active: currentTab === 'navy'}" ng-click="openTab('navy')">Navy</div>
-                                <div class="tab" ng-class="{active: currentTab === 'airforce'}" ng-click="openTab('airforce')">Air Force</div>
+                                <div class="tab" ng-class="{active: currentTab === 'army'}" ng-click="openTab('army')">
+                                    Army</div>
+                                <div class="tab" ng-class="{active: currentTab === 'navy'}" ng-click="openTab('navy')">
+                                    Navy</div>
+                                <div class="tab" ng-class="{active: currentTab === 'airforce'}"
+                                    ng-click="openTab('airforce')">Air Force</div>
                             </div>
                             <div id="army" class="tab-content" ng-class="{active: currentTab === 'army'}">
                                 <div class="checkbox-group">
                                     <div class="checkbox-item" ng-repeat="option in armyOptions">
-                                        <input type="checkbox" ng-model="newUser.armyOptions[option]" id="army{{$index}}">
+                                        <input type="checkbox" ng-model="newUser.armyOptions[option]"
+                                            id="army{{$index}}">
                                         <label for="army{{$index}}">{{option}}</label>
                                     </div>
                                 </div>
@@ -332,7 +340,8 @@
                             <div id="navy" class="tab-content" ng-class="{active: currentTab === 'navy'}">
                                 <div class="checkbox-group">
                                     <div class="checkbox-item" ng-repeat="option in navyOptions">
-                                        <input type="checkbox" ng-model="newUser.navyOptions[option]" id="navy{{$index}}">
+                                        <input type="checkbox" ng-model="newUser.navyOptions[option]"
+                                            id="navy{{$index}}">
                                         <label for="navy{{$index}}">{{option}}</label>
                                     </div>
                                 </div>
@@ -340,14 +349,16 @@
                             <div id="airforce" class="tab-content" ng-class="{active: currentTab === 'airforce'}">
                                 <div class="checkbox-group">
                                     <div class="checkbox-item" ng-repeat="option in airforceOptions">
-                                        <input type="checkbox" ng-model="newUser.airforceOptions[option]" id="airforce{{$index}}">
+                                        <input type="checkbox" ng-model="newUser.airforceOptions[option]"
+                                            id="airforce{{$index}}">
                                         <label for="airforce{{$index}}">{{option}}</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button class="btn" ng-click="createUser()">{{ editingUserId ? 'Update User' : 'Create User' }}</button>
+                    <button class="btn" ng-click="createUser()">{{ editingUserId ? 'Update User' : 'Create User'
+                        }}</button>
                 </div>
             </div>
             <div id="user-management-page" class="page" ng-class="{active: currentPage === 'user-management'}">
@@ -369,13 +380,17 @@
                                     <td>{{user.name}}</td>
                                     <td>{{user.email}}</td>
                                     <td>
-                                        <span class="branch-tag army-tag" ng-repeat="opt in user.armyOptions">{{opt}}</span>
-                                        <span class="branch-tag navy-tag" ng-repeat="opt in user.navyOptions">{{opt}}</span>
-                                        <span class="branch-tag airforce-tag" ng-repeat="opt in user.airforceOptions">{{opt}}</span>
+                                        <span class="branch-tag army-tag"
+                                            ng-repeat="opt in user.armyOptions">{{opt}}</span>
+                                        <span class="branch-tag navy-tag"
+                                            ng-repeat="opt in user.navyOptions">{{opt}}</span>
+                                        <span class="branch-tag airforce-tag"
+                                            ng-repeat="opt in user.airforceOptions">{{opt}}</span>
                                     </td>
                                     <td>
                                         <button class="btn" ng-click="editUser(user.id)">Edit</button>
-                                        <button class="btn" style="background-color:#f44336" ng-click="deleteUser(user.id)">Delete</button>
+                                        <button class="btn" style="background-color:#f44336"
+                                            ng-click="deleteUser(user.id)">Delete</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -388,7 +403,7 @@
 
     <script>
         angular.module('MilitaryApp', [])
-            .controller('DashboardCtrl', ['$scope', '$http', function($scope, $http) {
+            .controller('DashboardCtrl', ['$scope', '$http', function ($scope, $http) {
                 // Initialize scope variables
                 $scope.currentPage = 'dashboard';
                 $scope.currentTab = 'army';
@@ -407,7 +422,7 @@
                 $scope.airforceOptions = ['Fighter Command', 'Bomber Command', 'Reconnaissance', 'Transport', 'Air Defense'];
 
                 // Page navigation
-                $scope.showPage = function(pageId) {
+                $scope.showPage = function (pageId) {
                     $scope.currentPage = pageId;
                     if (pageId === 'user-management') {
                         $scope.displayUsers();
@@ -418,12 +433,12 @@
                 };
 
                 // Tab switching
-                $scope.openTab = function(tabName) {
+                $scope.openTab = function (tabName) {
                     $scope.currentTab = tabName;
                 };
 
                 // Clear form
-                $scope.clearForm = function() {
+                $scope.clearForm = function () {
                     $scope.editingUserId = null;
                     $scope.newUser = {
                         name: '',
@@ -436,7 +451,7 @@
                 };
 
                 // Create or update user
-                $scope.createUser = function() {
+                $scope.createUser = function () {
                     if (!$scope.newUser.name || !$scope.newUser.email || !$scope.newUser.password) {
                         alert('Please fill in all required fields');
                         return;
@@ -459,7 +474,7 @@
                         method: method,
                         url: url,
                         data: user
-                    }).then(function() {
+                    }).then(function () {
                         alert($scope.editingUserId ? 'User updated' : 'User created');
                         $scope.clearForm();
                         $scope.showPage('user-management');
@@ -467,24 +482,24 @@
                 };
 
                 // Display users
-                $scope.displayUsers = function() {
-                    $http.get('/api/users').then(function(response) {
+                $scope.displayUsers = function () {
+                    $http.get('/api/users').then(function (response) {
                         $scope.users = response.data;
                     });
                 };
 
                 // Delete user
-                $scope.deleteUser = function(id) {
+                $scope.deleteUser = function (id) {
                     if (!confirm('Are you sure you want to delete this user?')) return;
-                    $http.delete('/api/users/' + id).then(function() {
+                    $http.delete('/api/users/' + id).then(function () {
                         $scope.displayUsers();
                     });
                 };
 
                 // Edit user
-                $scope.editUser = function(id) {
-                    $http.get('/api/users').then(function(response) {
-                        var user = response.data.find(function(u) { return u.id === id; });
+                $scope.editUser = function (id) {
+                    $http.get('/api/users').then(function (response) {
+                        var user = response.data.find(function (u) { return u.id === id; });
                         if (!user) return;
                         $scope.editingUserId = id;
                         $scope.newUser = {
@@ -495,17 +510,17 @@
                             navyOptions: {},
                             airforceOptions: {}
                         };
-                        (user.armyOptions || []).forEach(function(opt) { $scope.newUser.armyOptions[opt] = true; });
-                        (user.navyOptions || []).forEach(function(opt) { $scope.newUser.navyOptions[opt] = true; });
-                        (user.airforceOptions || []).forEach(function(opt) { $scope.newUser.airforceOptions[opt] = true; });
+                        (user.armyOptions || []).forEach(function (opt) { $scope.newUser.armyOptions[opt] = true; });
+                        (user.navyOptions || []).forEach(function (opt) { $scope.newUser.navyOptions[opt] = true; });
+                        (user.airforceOptions || []).forEach(function (opt) { $scope.newUser.airforceOptions[opt] = true; });
                         $scope.showPage('create-user');
                     });
                 };
 
                 // Logout
-                $scope.logout = function() {
+                $scope.logout = function () {
                     localStorage.removeItem('currentUser');
-                    window.location.href = 'index.html';
+                    window.location.href = 'login.html';
                 };
 
                 // Initial load
@@ -513,4 +528,5 @@
             }]);
     </script>
 </body>
+
 </html>
