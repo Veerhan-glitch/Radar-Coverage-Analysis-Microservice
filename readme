@@ -1,10 +1,19 @@
-#in terminal (for 1st run)
+#in terminal 1 (for 1st run)
+cd RadarSimulationMicroservice 
+mvn clean install -o -s settings.xml
+
+#in terminal 2 (for 1st run)
 cd node_modules/live-server 
 npm install -g
+cd ../..
+live-server --port=8000
+
+# if above dount work use python3 -m http.server 8000
+# if above dount work use the vsc live server
+
 
 #in terminal 1
 cd RadarSimulationMicroservice 
-mvn clean install -o -s settings.xml
 mvn spring-boot:run -o -s settings.xml
 
 #in terminal 2
@@ -13,3 +22,9 @@ live-server --port=8000
 # if above dount work use python3 -m http.server 8000
 # if above dount work use the vsc live server
 
+
+
+enter dummy values for "Horizontal Resolution" and "Vertical Resolution"
+
+click on any pont on glob to show the dome
+size of dome depends on "Radar Cross Section (m²)"
