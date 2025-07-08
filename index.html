@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Radar Coverage Simulator</title>
+
+  <!-- Chart.js (offline) -->
+  <script src="libs/chart.js"></script>
+
+  <!-- jsPDF (offline) -->
+  <script src="libs/jspdf.umd.min.js"></script>
+
+  <!-- CesiumJS (3D Map, offline) -->
+  <link rel="stylesheet" href="libs/cesium/Widgets/widgets.css" />
+  <script src="libs/cesium/Cesium.js"></script>
+
+  <!-- Your own styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <h1>Radar Coverage Simulator</h1>
+      <nav class="nav-menu">
+        <a href="#">Home</a>
+        <a href="#">Simulation Setup</a>
+        <a href="#">Results Analysis</a>
+        <a href="#">Settings</a>
+        <a href="#">Help & Documentation</a>
+      </nav>
+    </header>
+
+    <aside class="sidebar">
+      <h2>Radar Parameters</h2>
+      <label>Transmit Power (W)*: <input type="number" name="transmitPower" value="1000000" /></label>
+      <label>Transmit Gain: <input type="number" name="transmitGain" value="30" /></label>
+      <label>Receive Gain: <input type="number" name="receiveGain" value="30" /></label>
+      <label>Frequency (Hz): <input type="number" name="frequency" value="10000000" /></label>
+      <label>Radar Cross Section (m²): <input type="number" name="rcs" value="1" /></label>
+      <label>Min Detectable Signal (W): <input type="number" name="minDetectableSignal" value="1e-13" /></label>
+
+      <h2>Environmental Conditions</h2>
+      <label>Refractivity Gradient (/m): <input type="number" step="any" name="refractivityGradient" value="-0.000039" /></label>
+      <label>Atmospheric Profile**: <input type="file" /></label>
+      <label>Terrain Data (DTED)**: <input type="file" /></label>
+      <label>Refractivity Model**:
+        <select>
+          <option>Standard Atmosphere</option>
+          <option>Custom Profile</option>
+        </select>
+      </label>
+
+      <h2>Simulation Controls</h2>
+      <label>Simulation Range (km)**: <input type="range" min="0" max="300" /></label>
+      <label>Horizontal Resolution**: <input type="number" /></label>
+      <label>Vertical Resolution**: <input type="number" /></label>
+
+      <button class="run-btn">Run Simulation</button>
+    </aside>
+
+    <main class="main">
+      <section class="map-container">
+        <h2>3D Coverage Visualization</h2>
+        <div class="map-placeholder"></div>
+      </section>
+      <section class="chart-section">
+        <h2>Signal Analysis Charts</h2>
+        <div class="charts-placeholder">
+          <canvas id="chart1"></canvas>
+          <canvas id="chart2"></canvas>
+          <canvas id="chart3"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <aside class="output-panel">
+      <h2>Simulation Summary</h2>
+      <p id="summaryText">[Summary of parameters]</p>
+
+      <h3>Export Options</h3>
+      <button onclick="exportToPDF()">Export PDF</button>
+      <button onclick="exportToCSV()">Export CSV</button>
+
+      <h3>Log Messages</h3>
+      <div class="log-box" id="logMessages">
+        <p>[Simulation started...]</p>
+        <p>[Loading terrain data...]</p>
+      </div>
+    </aside>
+
+    <footer class="footer">
+      <div class="status">
+        <p>Status: Running</p>
+        <progress value="70" max="100"></progress>
+      </div>
+      <div class="contact">
+        <a href="#">Support</a> |
+        <a href="#">Contact</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+

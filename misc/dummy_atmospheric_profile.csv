@@ -1,0 +1,4 @@
+Altitude(m),Temperature(C),Pressure(hPa),Humidity(%)
+0,15,1013,60
+1000,8.5,898,55
+2000,2,794,50
