@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue Jul 15 22:57:43 IST 2025
+@default-local-repo-file\://${project.basedir}/../offline-m2/.lastUpdated=1752600315553
+file\://${project.basedir}/../offline-m2/.error=Could not transfer artifact org.springframework.boot\:spring-boot-starter-parent\:pom\:3.1.0 from/to local-repo (file\://${project.basedir}/../offline-m2)\: Repository path /../offline-m2 does not exist, and cannot be created.
+https\://repo.maven.apache.org/maven2/.lastUpdated=1752600463119

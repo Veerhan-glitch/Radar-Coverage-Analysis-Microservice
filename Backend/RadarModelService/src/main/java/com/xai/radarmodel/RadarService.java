@@ -1,0 +1,83 @@
+package com.xai.radarmodel;
+
+import com.xai.radarmodel.entity.RadarParameters;
+import com.xai.radarmodel.entity.RadarOutputs;
+import com.xai.radarmodel.repository.RadarParametersRepository;
+import com.xai.radarmodel.repository.RadarOutputsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class RadarService {
+
+    @Autowired
+    private RadarParametersRepository inputRepo;
+
+    @Autowired
+    private RadarOutputsRepository outputRepo;
+
+    private static final double C = 3e8;
+    private static final double SIGMA = 1.0;
+    private static final double EPSILON = 1e-10;
+
+    public RadarOutputs calculateRadar(RadarParameters input) {
+        inputRepo.save(input);
+
+        double lambda = C / (input.getFreqR_radar() * 1e9);
+        double r = calculateDistance3D(0, 0, 0, input.getLatT_radar(), input.getLongT_radar(), input.getHeightT_radar());
+
+        double gR = Math.pow(10, input.getGr() / 10);
+        double lO = Math.pow(10, input.getLo() / 10);
+
+        double pReceived = (input.getPr_radar() * gR * gR * SIGMA * lambda * lambda) /
+                           (Math.pow(4 * Math.PI, 3) * Math.pow(r, 4) * (lO + EPSILON));
+        double sReceiveRadarDb = 10 * Math.log10(pReceived + EPSILON);
+
+        double fRLinear = Math.pow(10, input.getFr_radar() / 10);
+        double noise = (input.getK_radar() + EPSILON) * (input.getT_radar() + EPSILON)
+                * (input.getBr_radar() * 1e6 + EPSILON) * (fRLinear + EPSILON);
+        double noiseDb = 10 * Math.log10(noise + EPSILON);
+
+        double sinrLinear = (pReceived + EPSILON) / (noise + EPSILON);
+        double sIRadarDb = 10 * Math.log10(sinrLinear + EPSILON);
+
+        double snrLinear = Math.pow(10, (sReceiveRadarDb - noiseDb) / 10);
+        double threshold = input.getPfa_radar() > 0 && input.getPfa_radar() < 1
+                         ? Math.sqrt(-Math.log(input.getPfa_radar()))
+                         : 0;
+        double pd = 0.5 * (1 + erf((Math.sqrt(snrLinear) - threshold) / Math.sqrt(2)));
+
+        RadarOutputs output = new RadarOutputs();
+        output.setSReceiveRadar(sReceiveRadarDb);
+        output.setSIRadar(sIRadarDb);
+        output.setPd(Double.isNaN(pd) ? 0.0 : pd);
+        output.setParameters(input);
+
+        return outputRepo.save(output);
+    }
+
+    private double haversine(double lat1, double lon1, double lat2, double lon2) {
+        double R = 6371e3;
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                   Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    private double calculateDistance3D(double lat1, double lon1, double h1,
+                                       double lat2, double lon2, double h2) {
+        double d = haversine(lat1, lon1, lat2, lon2);
+        return Math.sqrt(d * d + Math.pow(h1 - h2, 2));
+    }
+
+    private double erf(double x) {
+        double t = 1.0 / (1.0 + 0.5 * Math.abs(x));
+        double tau = t * Math.exp(-x * x - 1.26551223 + t * (1.00002368 +
+                    t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 +
+                    t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 +
+                    t * (-0.82215223 + t * 0.17087277)))))))));
+        return x >= 0 ? 1 - tau : tau - 1;
+    }
+}

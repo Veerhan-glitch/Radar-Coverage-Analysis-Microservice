@@ -1,0 +1,7 @@
+com/xai/ecmmodel/EcmService.class
+com/xai/ecmmodel/entity/ECMOutputs.class
+com/xai/ecmmodel/EcmController.class
+com/xai/ecmmodel/repository/ECMOutputsRepository.class
+com/xai/ecmmodel/repository/ECMParametersRepository.class
+com/xai/ecmmodel/entity/ECMParameters.class
+com/xai/ecmmodel/Application.class

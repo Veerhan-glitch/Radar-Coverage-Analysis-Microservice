@@ -1,0 +1,355 @@
+/* styles.css */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+body {
+    background-color: #f5f8fa;
+    color: #212529;
+}
+.app-container {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "sidebar main output"
+        "footer footer footer";
+    grid-template-columns: 250px 1fr 300px;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+}
+@media (max-width: 1024px) {
+    .app-container {
+        grid-template-areas:
+            "header"
+            "main"
+            "sidebar"
+            "output"
+            "footer";
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+    }
+    .sidebar, .output-panel {
+        border: none;
+    }
+}
+.header {
+    grid-area: header;
+    background-color: #003f5c;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nav-menu a {
+    color: white;
+    margin-left: 1rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+.sidebar {
+    grid-area: sidebar;
+    background: #e4edf3;
+    padding: 1rem;
+    overflow-y: auto;
+}
+.sidebar label {
+    display: block;
+    margin: 8px 0;
+    font-size: 0.95rem;
+}
+.sidebar input, .sidebar select {
+    width: 100%;
+    padding: 4px;
+    margin-top: 4px;
+}
+.run-btn {
+    margin-top: 10px;
+    padding: 8px;
+    width: 100%;
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+.run-btn:hover {
+    background-color: #005f86;
+}
+.main {
+    grid-area: main;
+    padding: 1rem;
+    overflow-y: auto;
+}
+.map-container, .chart-section {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+.map-placeholder, #map3D {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+#map3D canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+}
+#map3D .cesium-viewer-toolbar,
+#map3D .cesium-viewer-navigationContainer {
+    position: absolute;
+    z-index: 10;
+}
+#map3D .cesium-viewer-toolbar {
+    top: 10px;
+    right: 10px;
+    left: auto;
+}
+#map3D .cesium-viewer-navigationContainer {
+    bottom: 10px;
+    right: 10px;
+    left: auto;
+}
+#map3D .cesium-viewer-bottom {
+    display: none;
+}
+.charts-placeholder {
+    height: 300px;
+}
+.output-panel {
+    grid-area: output;
+    background: #f0f5f9;
+    padding: 1rem;
+    border-left: 1px solid #ccc;
+    overflow-y: auto;
+}
+.output-panel h2, .output-panel h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+.output-panel .log-box {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    height: 100px;
+    overflow-y: auto;
+    font-size: 0.9em;
+}
+.footer {
+    grid-area: footer;
+    background-color: #003f5c;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    align-items: center;
+}
+.footer a {
+    color: #b5e4ff;
+    text-decoration: none;
+    margin-left: 10px;
+}
+.status progress {
+    height: 8px;
+    width: 100px;
+}
+.result-table, .nested-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    border: 1px solid #444;
+}
+.result-table td, .nested-table td {
+    border: 1px solid #444;
+    padding: 6px 10px;
+    vertical-align: top;
+}
+.result-table .key-cell, .nested-table .key-cell {
+    font-weight: bold;
+    background-color: #e4edf3;
+    width: 40%;
+}
+.nested-table {
+    background-color: #fff;
+    margin-top: 6px;
+}
+
+
+#map3D.fullscreen-map {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: #000;
+  z-index: 9999;
+}
+
+#map3D.fullscreen-map canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+.service-form { display: none; }
+.service-form label {
+  display: flex;
+  /* align-items: center; */
+  gap: 6px;
+  margin: 4px 0;
+}
+/* in styles.css */
+
+/* Make each label a column: text on top, input below */
+.service-form label {
+  display: flex;
+  flex-direction: column;
+  margin: 6px 0;    /* space between fields */
+  font-size: 14px;  /* adjust as you like */
+}
+
+/* Slight indent on inputs for clarity */
+.service-form label input,
+.service-form label select {
+  margin-top: 4px;
+  padding: 4px;
+  width: 100%;      /* full‑width if you prefer */
+  box-sizing: border-box;
+}
+/* ─── Form Inputs ─────────────────────────────────────────────────────── */
+#input-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;            /* space between fields */
+}
+
+#input-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+#input-form label input,
+#input-form label select {
+  margin-top: 4px;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────── */
+.run-btn,
+#add-weather-btn {
+  padding: 8px 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  border: none;
+  background-color: #007acc;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.run-btn:hover,
+#add-weather-btn:hover {
+  background-color: #005fa3;
+}
+
+/* ─── Weather Blocks ─────────────────────────────────────────────────── */
+.weather-block {
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 8px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.weather-block .coords {
+  grid-column: 1 / -1;
+}
+
+.weather-block label {
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ─── Charts / Result Table ───────────────────────────────────────────── */
+.charts-placeholder {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;  /* ensure horizontal scroll if narrow */
+}
+
+.result-table td,
+.result-table th {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  font-size: 13px;
+  word-break: break-word;
+}
+
+.result-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.result-table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+/* ─── Overall Layout Helpers ─────────────────────────────────────────── */
+.sidebar,
+.main,
+.output-panel {
+  padding: 12px;
+}
+
+.map-placeholder,
+.charts-placeholder {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+}
+  table {
+    border-collapse: collapse;
+    margin-bottom: 10px;
+  }
+
+  table td,
+  table th {
+    border: 1px solid #333;
+    padding: 4px 8px;
+  }
+
+  .vertical-result > div {
+    margin-bottom: 16px;
+    }
+
+
+
+    .charts-placeholder {
+  max-height: none;
+  height: auto;
+  overflow: visible;
+  padding: 10px;
+}

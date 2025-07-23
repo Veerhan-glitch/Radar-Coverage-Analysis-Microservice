@@ -1,0 +1,7 @@
+com/xai/radarmodel/entity/RadarParameters.class
+com/xai/radarmodel/RadarController.class
+com/xai/radarmodel/RadarService.class
+com/xai/radarmodel/repository/RadarParametersRepository.class
+com/xai/radarmodel/entity/RadarOutputs.class
+com/xai/radarmodel/repository/RadarOutputsRepository.class
+com/xai/radarmodel/Application.class
