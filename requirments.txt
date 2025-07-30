@@ -1,9 +1,7 @@
-Tool               Version
------------------- ---------------------
-Java               21.0.7
-Maven              3.8.7
-Node.js            22.17.0
-npm                10.9.2   (included by node)
-http-server        14.1.1   (instal by npm install -g http-server)
-PostgreSQL (psql)  16.9
-Spring Boot        3.1.0
+Tool	          Version	     Check Version Command
+Java	          21.0.7	       java -version
+Maven	           3.8.7	       mvn -version
+Node.js	          22.17.0	       node -v
+npm	              10.9.2	       npm -v
+PostgreSQL	      16.9	           psql --version
+Angular CLI	      20.1.3	       ng version

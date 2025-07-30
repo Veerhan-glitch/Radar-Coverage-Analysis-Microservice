@@ -1,0 +1,728 @@
+/* ─── Global Styles ───────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  color: #f9f9f9;
+}
+
+.wrapper {
+  background-color: black;
+  color: #212529;
+  margin: -8px;
+}
+
+/* ─── Layout ───────────────────────────────────────────────────── */
+.app-container {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "sidebar main output"
+    "footer footer footer";
+  grid-template-columns: 250px 1fr 300px;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+}
+
+@media (max-width: 1024px) {
+  .app-container {
+    grid-template-areas:
+      "header"
+      "main"
+      "sidebar"
+      "output"
+      "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto;
+  }
+
+  .sidebar, .output-panel {
+    border: none;
+  }
+}
+
+/* ─── Header ───────────────────────────────────────────────────── */
+.header {
+  grid-area: header;
+  background-color: #1a2525;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-menu a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────────── */
+.sidebar {
+  grid-area: sidebar;
+  background: #2c3e50;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.sidebar label {
+  display: block;
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.sidebar input,
+.sidebar select {
+  width: 100%;
+  padding: 4px;
+  margin-top: 4px;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────── */
+.run-btn,
+#add-weather-btn {
+  padding: 8px 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  border: none;
+  background-color: #1a2525;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.run-btn:hover,
+#add-weather-btn:hover {
+  background-color: #1a2525;
+}
+
+/* Special overrides */
+#add-weather-btn {
+  margin-top: 1rem !important;
+  background: #1a2525 !important;
+}
+
+.weather-block .remove-weather {
+  margin-top: 1rem !important;
+  background: #2e1b18 !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.4rem 1rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+}
+
+.weather-block .remove-weather:hover {
+  background: #17b0c1 !important;
+}
+
+/* ─── Main Content ─────────────────────────────────────────────── */
+.main {
+  grid-area: main;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+/* ─── Map and Chart Containers ─────────────────────────────────── */
+.map-container,
+.chart-section,
+.map-placeholder,
+.charts-placeholder {
+  background: #2c3e50cc;
+  border-radius: 4px;
+  padding: 8px;
+  border: 1px solid #4b647dcc;
+  margin-bottom: 1rem;
+}
+
+.map-placeholder,
+#map3D {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background-color: #2c3e50cc;
+}
+
+#map3D canvas {
+  position: absolute;
+  background-color: #2c3e50cc;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#map3D .cesium-viewer-toolbar,
+#map3D .cesium-viewer-navigationContainer {
+  position: absolute;
+  z-index: 10;
+}
+
+#map3D .cesium-viewer-toolbar {
+  top: 10px;
+  right: 10px;
+  left: auto;
+}
+
+#map3D .cesium-viewer-navigationContainer {
+  bottom: 10px;
+  right: 10px;
+  left: auto;
+}
+
+#map3D .cesium-viewer-bottom {
+  display: none;
+}
+
+#map3D.fullscreen-map {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: #000;
+  z-index: 9999;
+}
+
+#map3D.fullscreen-map canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ─── Output Panel ─────────────────────────────────────────────── */
+.output-panel {
+  grid-area: output;
+  background: #2c3e50;
+  padding: 12px;
+  border-left: 1px solid #4b647dcc;
+  overflow-y: auto;
+}
+
+.output-panel h2,
+.output-panel h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.output-panel .log-box {
+  background-color: #2c3e50;
+  border: 1px solid #4b647dcc;
+  padding: 0.5rem;
+  height: 100px;
+  overflow-y: auto;
+  font-size: 0.9em;
+}
+
+/* ─── Tables ───────────────────────────────────────────────────── */
+.result-table,
+.nested-table,
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.result-table td,
+.nested-table td,
+.result-table th,
+table td,
+table th {
+  border: 1px solid #444;
+  padding: 6px 10px;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.result-table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.result-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.result-table {
+  min-width: 600px;
+}
+
+.result-table .key-cell,
+.nested-table .key-cell {
+  font-weight: bold;
+  background-color: #e4edf3;
+  width: 40%;
+}
+
+.nested-table {
+  background-color: #fff;
+  margin-top: 6px;
+}
+
+table {
+  margin-bottom: 10px;
+}
+
+/* ─── Forms ────────────────────────────────────────────────────── */
+#input-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+#input-form label,
+.service-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+#input-form label input,
+#input-form label select,
+.service-form label input,
+.service-form label select {
+  margin-top: 4px;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #4b647dcc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.service-form {
+  display: none;
+}
+
+.service-form label {
+  gap: 6px;
+}
+
+/* ─── Weather Block ────────────────────────────────────────────── */
+.weather-block {
+  border: 1px solid #4b647dcc;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: #202d39cc;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.weather-block .coords {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.weather-block label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.weather-block input[type="number"] {
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+/* ─── Vertical Result Styling ──────────────────────────────────── */
+.vertical-result > div {
+  margin-bottom: 16px;
+}
+/* ─── Global Styles ───────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  color: #f9f9f9;
+}
+
+.wrapper {
+  background-color: black;
+  color: #212529;
+  margin: -8px;
+}
+
+/* ─── Layout ───────────────────────────────────────────────────── */
+.app-container {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "sidebar main output"
+    "footer footer footer";
+  grid-template-columns: 250px 1fr 300px;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+}
+
+@media (max-width: 1024px) {
+  .app-container {
+    grid-template-areas:
+      "header"
+      "main"
+      "sidebar"
+      "output"
+      "footer";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto auto;
+  }
+
+  .sidebar, .output-panel {
+    border: none;
+  }
+}
+
+/* ─── Header ───────────────────────────────────────────────────── */
+.header {
+  grid-area: header;
+  background-color: #1a2525;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-menu a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ─── Sidebar ───────────────────────────────────────────────────── */
+.sidebar {
+  grid-area: sidebar;
+  background: #2c3e50;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.sidebar label {
+  display: block;
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+
+.sidebar input,
+.sidebar select {
+  width: 100%;
+  padding: 4px;
+  margin-top: 4px;
+}
+
+/* ─── Buttons ───────────────────────────────────────────────────── */
+.run-btn,
+#add-weather-btn {
+  padding: 8px 12px;
+  margin-top: 12px;
+  font-size: 14px;
+  border: none;
+  background-color: #1a2525;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.run-btn:hover,
+#add-weather-btn:hover {
+  background-color: #1a2525;
+}
+
+/* Special overrides */
+#add-weather-btn {
+  margin-top: 1rem !important;
+  background: #1a2525 !important;
+}
+
+.weather-block .remove-weather {
+  margin-top: 1rem !important;
+  background: #2e1b18 !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.4rem 1rem !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+}
+
+.weather-block .remove-weather:hover {
+  background: #17b0c1 !important;
+}
+
+/* ─── Main Content ─────────────────────────────────────────────── */
+.main {
+  grid-area: main;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+/* ─── Map and Chart Containers ─────────────────────────────────── */
+.map-container,
+.chart-section,
+.map-placeholder,
+.charts-placeholder {
+  background: #2c3e50cc;
+  border-radius: 4px;
+  padding: 8px;
+  border: 1px solid #4b647dcc;
+  margin-bottom: 1rem;
+}
+
+.map-placeholder,
+#map3D {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background-color: #2c3e50cc;
+}
+
+#map3D canvas {
+  position: absolute;
+  background-color: #2c3e50cc;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#map3D .cesium-viewer-toolbar,
+#map3D .cesium-viewer-navigationContainer {
+  position: absolute;
+  z-index: 10;
+}
+
+#map3D .cesium-viewer-toolbar {
+  top: 10px;
+  right: 10px;
+  left: auto;
+}
+
+#map3D .cesium-viewer-navigationContainer {
+  bottom: 10px;
+  right: 10px;
+  left: auto;
+}
+
+#map3D .cesium-viewer-bottom {
+  display: none;
+}
+
+#map3D.fullscreen-map {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: #000;
+  z-index: 9999;
+}
+
+#map3D.fullscreen-map canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ─── Output Panel ─────────────────────────────────────────────── */
+.output-panel {
+  grid-area: output;
+  background: #2c3e50;
+  padding: 12px;
+  border-left: 1px solid #4b647dcc;
+  overflow-y: auto;
+}
+
+.output-panel h2,
+.output-panel h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.output-panel .log-box {
+  background-color: #2c3e50;
+  border: 1px solid #4b647dcc;
+  padding: 0.5rem;
+  height: 100px;
+  overflow-y: auto;
+  font-size: 0.9em;
+}
+
+/* ─── Tables ───────────────────────────────────────────────────── */
+.result-table,
+.nested-table,
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.result-table td,
+.nested-table td,
+.result-table th,
+table td,
+table th {
+  border: 1px solid #444;
+  padding: 6px 10px;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.result-table th {
+  background-color: #f1f1f1;
+  font-weight: bold;
+}
+
+.result-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.result-table {
+  min-width: 600px;
+}
+
+.result-table .key-cell,
+.nested-table .key-cell {
+  font-weight: bold;
+  background-color: #e4edf3;
+  width: 40%;
+}
+
+.nested-table {
+  background-color: #fff;
+  margin-top: 6px;
+}
+
+table {
+  margin-bottom: 10px;
+}
+
+/* ─── Forms ────────────────────────────────────────────────────── */
+#input-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+#input-form label,
+.service-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+#input-form label input,
+#input-form label select,
+.service-form label input,
+.service-form label select {
+  margin-top: 4px;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #4b647dcc;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.service-form {
+  display: none;
+}
+
+.service-form label {
+  gap: 6px;
+}
+
+/* ─── Weather Block ────────────────────────────────────────────── */
+.weather-block {
+  border: 1px solid #4b647dcc;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: #202d39cc;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.weather-block .coords {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.weather-block label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.weather-block input[type="number"] {
+  width: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+/* ─── Vertical Result Styling ──────────────────────────────────── */
+.vertical-result > div {
+  margin-bottom: 16px;
+}
+/* ─── Export Buttons ───────────────────────────────────────────── */
+.footer button {
+  padding: 8px 12px;
+  margin: 0.5rem 0.25rem;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #1a2525;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.footer button:hover {
+  background-color: #2e3b3b;
+  transform: translateY(-1px);
+}
+
+/* Match output panel border style */
+.output-panel,
+.output-panel .log-box,
+.result-table,
+.nested-table,
+.weather-block {
+  border-color: #555 !important;
+}
+/* ─── Styled Inputs and Dropdowns ───────────────────────────── */
+input[type="text"],
+input[type="number"],
+select {
+  background-color: #1a2525;
+  color: #ffffff;
+  border: 1px solid #555;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin: 0.5rem 0;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #4fd1c5;
+  box-shadow: 0 0 0 2px rgba(79, 209, 197, 0.2);
+}

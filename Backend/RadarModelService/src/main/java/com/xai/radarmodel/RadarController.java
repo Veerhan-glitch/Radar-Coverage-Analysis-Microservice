@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/radar")
-@CrossOrigin(origins = "http://127.0.0.1:8080")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RadarController {
 
     @Autowired

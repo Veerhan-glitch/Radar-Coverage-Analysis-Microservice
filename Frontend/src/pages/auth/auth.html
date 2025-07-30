@@ -1,0 +1,49 @@
+<!-- Full-page wrapper for centering the form -->
+<div class="wrapper">
+
+    <!-- Login form, bound to Angular's form system -->
+    <form (ngSubmit)="login()" #loginForm="ngForm" class="login-form">
+
+        <!-- Form heading -->
+        <h2>Login</h2>
+
+        <!-- Username input -->
+        <label for="username">Name:</label>
+        <input
+            id="username"
+            type="username" 
+            [(ngModel)]="name"      
+            name="username"          
+            placeholder="Enter username"
+            required
+        />
+
+        <!-- Password input -->
+        <label for="password">Password:</label>
+        <input
+            type="password"
+            id="password"
+            [(ngModel)]="password"   
+            name="password"
+            required
+        />
+
+        <!-- Submit button -->
+        <button type="submit">Login</button>
+
+        <!-- Error message shown if login fails -->
+        <p class="error">{{ errorMsg }}</p>
+
+        <!-- Optional register link (currently commented out) -->
+        <!--
+        <p style="text-align: center; margin-top: 10px;">
+            Don't have an account?
+            <a [routerLink]="['/register']"
+               style="color: #2a9d8f; text-decoration: none; font-weight: bold;">
+               Register here
+            </a>
+        </p>
+        -->
+
+    </form>
+</div>

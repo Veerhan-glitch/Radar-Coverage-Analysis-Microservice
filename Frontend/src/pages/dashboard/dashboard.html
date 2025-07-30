@@ -1,0 +1,353 @@
+<!-- Main Wrapper -->
+<div class="wrapper">
+<!-- Application Layout Container (Grid) -->
+<div class="app-container">
+<!-- Header section for the dashboard -->
+<header class="header">
+  
+  <!-- Title of the dashboard -->
+  <h1>Radar Microservices Dashboard</h1>
+  
+  <!-- Navigation menu -->
+  <nav class="nav-menu">
+    <a>Home</a>                         <!-- Placeholder link for Home -->
+    <a>Microservice Setup</a>          <!-- Placeholder link for microservice setup -->
+    <a>Results Analysis</a>            <!-- Placeholder link for results analysis -->
+    <a>Settings</a>                    <!-- Placeholder link for settings -->
+    <a>Help & Documentation</a>        <!-- Placeholder link for help/docs -->
+    <a [routerLink]="['/auth']">Log Out</a> <!-- Link to route user back to login -->
+  </nav>
+
+</header>
+
+<!-- Sidebar for microservice input forms -->
+<aside class="sidebar">
+  <h2>Microservice Inputs</h2>
+
+  <!-- Dropdown to select which microservice form to display -->
+  <label>
+    Select Microservice:
+    <select #serviceSelect>
+      <option value="absorption-loss">Absorption Loss</option>
+      <option value="ecm-model">ECM Model</option>
+      <option value="radar-model">Radar Model</option>
+    </select>
+  </label>
+
+  <!-- ================= Absorption Loss Inputs ================= -->
+  <div id="form-absorption-loss" class="service-form">
+    <!-- Add dynamic weather conditions -->
+    <button id="add-weather-btn" #addWeatherBtn type="button">+ Add Weather Condition</button>
+    <div #weatherContainer></div>
+
+    <!-- Weather & environmental factors -->
+    <label>Rainfall Rate (RFR mm/hr):
+      <input id="rfr" type="number" value="10">
+    </label>
+    <label>Snowfall Rate (SFR mm/hr):
+      <input id="sfr" type="number" value="5">
+    </label>
+    <label>Visibility Fog (m):
+      <input id="visFog" type="number" value="3">
+    </label>
+
+    <!-- Frequency parameters -->
+    <label>Radar Frequency (Freq_r GHz):
+      <input id="freqR" type="number" value="1.2e9">
+    </label>
+    <label>Jammer Frequency (Freq_j GHz):
+      <input id="freqJ" type="number" value="1e9">
+    </label>
+    <label>Operating Frequency (Freq_op GHz):
+      <input id="freqOp" type="number" value="1.2e9">
+    </label>
+
+    <!-- Radar location -->
+    <label>Radar Latitude:
+      <input id="latR" type="number" value="34.2">
+    </label>
+    <label>Radar Longitude:
+      <input id="longR" type="number" value="69.2">
+    </label>
+    <label>Radar Height (m):
+      <input id="heightR" type="number" value="500">
+    </label>
+
+    <!-- Target location -->
+    <label>Target Latitude:
+      <input id="latT" type="number" value="34.1">
+    </label>
+    <label>Target Longitude:
+      <input id="longT" type="number" value="69.1">
+    </label>
+    <label>Target Height (m):
+      <input id="heightT" type="number" value="2000">
+    </label>
+
+    <!-- Jammer location -->
+    <label>Jammer Latitude:
+      <input id="latJ" type="number" value="34.1">
+    </label>
+    <label>Jammer Longitude:
+      <input id="longJ" type="number" value="69.1">
+    </label>
+    <label>Jammer Height (m):
+      <input id="heightJ" type="number" value="2000">
+    </label>
+  </div>
+
+  <!-- ================= ECM Model Inputs ================= -->
+  <div id="form-ecm-model" class="service-form">
+    <!-- Jammer signal and antenna parameters -->
+    <label>Jammer Power (P_j W):
+      <input id="pJ" type="number" value="100">
+    </label>
+    <label>Jammer Gain (G_j dB):
+      <input id="gJ" type="number" value="20">
+    </label>
+    <label>Jammer Loss (L_j dB):
+      <input id="lJ" type="number" value="10">
+    </label>
+    <label>Azimuth (Azimuth_j):
+      <input id="azimuthJ" type="number" value="35">
+    </label>
+    <label>Elevation (Elevation_j):
+      <input id="elevationJ" type="number" value="24">
+    </label>
+    <label>Beamwidth Azimuth:
+      <input id="beamwidthAzJ" type="number" value="25">
+    </label>
+    <label>Beamwidth Elevation:
+      <input id="beamwidthElJ" type="number" value="25">
+    </label>
+    <label>Jammer Bandwidth (B_j Hz):
+      <input id="bJ" type="number" value="500e6">
+    </label>
+    <label>Jammer Frequency (Freq_j GHz):
+      <input id="freqJ" type="number" value="1">
+    </label>
+
+    <!-- Jammer location -->
+    <label>Jammer Latitude:
+      <input id="latJ" type="number" value="34.1">
+    </label>
+    <label>Jammer Longitude:
+      <input id="longJ" type="number" value="69.1">
+    </label>
+    <label>Jammer Height (m):
+      <input id="heightJ" type="number" value="2000">
+    </label>
+
+    <!-- Jammer configuration -->
+    <label>Jammer Type:
+      <select id="jammerType">
+        <option>Responsive</option>
+        <option>Non-Responsive</option>
+      </select>
+    </label>
+    <label id="jammerSubWrapper">
+      Sub Option:
+      <select id="jammerSubType">
+        <option>Self - protection</option>
+        <option>Escort (non stationary standoff)</option>
+        <option>Stationary stand off</option>
+      </select>
+    </label>
+
+    <!-- Antenna configuration -->
+    <label>
+      Antenna Type:
+      <select #antennaTypeECM id="antennaType">
+        <option>Gain Pattern</option>
+        <option>Measured gain</option>
+        <option>User Defined Constant Gain</option>
+      </select>
+    </label>
+    <label #antennaSubWrapperECM id="antennaSubWrapper" style="display:none;">
+      Sub Option:
+      <select id="antennaSubType">
+        <option>Omnidirectional</option>
+        <option>Uniform</option>
+        <option>Cosine</option>
+        <option>Taylor's Beam</option>
+        <option>Consecant Sequare beam</option>
+        <option>Fan Beam</option>
+        <option>Gaussian</option>
+        <option>Parabolic</option>
+        <option>Electronically Scanned Array</option>
+      </select>
+    </label>
+
+    <!-- Radar parameters -->
+    <label>Radar Latitude:
+      <input id="latR" type="number" value="34.2">
+    </label>
+    <label>Radar Longitude:
+      <input id="longR" type="number" value="69.2">
+    </label>
+    <label>Radar Height (m):
+      <input id="heightR" type="number" value="500">
+    </label>
+    <label>Radar Bandwidth (B_r Hz):
+      <input id="bR" type="number" value="200e6">
+    </label>
+    <label>Radar Frequency (Freq_r GHz):
+      <input id="freqRm" type="number" value="1.2">
+    </label>
+  </div>
+
+  <!-- ================= Radar Model Inputs ================= -->
+  <div id="form-radar-model" class="service-form">
+    <!-- Radar gain and loss parameters -->
+    <label>Radar Gain (G_r dB):
+      <input id="gr" type="number" value="8.3">
+    </label>
+    <label>Radar Loss (L_o dB):
+      <input id="lo" type="number" value="3.7">
+    </label>
+
+    <!-- Polarization settings -->
+    <label>Polarization_R:
+      <select id="polarizationR">
+        <option>Linear Horizontal</option>
+        <option>Linear Vertical</option>
+        <option>RCP</option>
+        <option>LCP</option>
+      </select>
+    </label>
+    <label>Polarization_J:
+      <select id="polarizationJ">
+        <option>Linear 45</option>
+        <option>RCP</option>
+        <option>LCP</option>
+      </select>
+    </label>
+
+    <!-- Antenna configuration -->
+    <label>
+      Antenna Type:
+      <select #antennaTypeRadar id="antennaType">
+        <option>Gain Pattern</option>
+        <option>Measured gain</option>
+        <option>User Defined Constant Gain</option>
+      </select>
+    </label>
+    <label #antennaSubWrapperRadar id="antennaSubWrapper" style="display:none;">
+      Sub Option:
+      <select id="antennaSubType">
+        <option>Omnidirectional</option>
+        <option>Uniform</option>
+        <option>Cosine</option>
+        <option>Taylor's Beam</option>
+        <option>Consecant Sequare beam</option>
+        <option>Fan Beam</option>
+        <option>Gaussian</option>
+        <option>Parabolic</option>
+        <option>Electronically Scanned Array</option>
+      </select>
+    </label>
+
+    <!-- Radar signal and system parameters -->
+    <label>Radar Frequency (Freq_r GHz):
+      <input id="freqR" type="number" value="12.4e9">
+    </label>
+    <label>Radar Power (P_r W):
+      <input id="pr" type="number" value="15200000">
+    </label>
+    <label>Radar Bandwidth (B_r Hz):
+      <input id="br" type="number" value="56.7e6">
+    </label>
+    <label>Noise Figure (F_r dB):
+      <input id="fr" type="number" value="6.2">
+    </label>
+    <label>Boltzmann Constant (k):
+      <input id="k" type="number" value="1.38e-23">
+    </label>
+    <label>System Temperature (T K):
+      <input id="t" type="number" value="290">
+    </label>
+
+    <!-- Beam properties -->
+    <label>Bandwidth Elevation:
+      <input id="BMWEl_R" type="number" value="-32">
+    </label>
+    <label>Bandwidth Azimuth:
+      <input id="BMWAz_R" type="number" value="67">
+    </label>
+    <label>Elevation Limit:
+      <input id="elLimit" type="number" value="65">
+    </label>
+
+    <!-- Target location -->
+    <label>Target Latitude:
+      <input id="latT" type="number" value="22.4">
+    </label>
+    <label>Target Longitude:
+      <input id="longT" type="number" value="88.3">
+    </label>
+    <label>Target Height (m):
+      <input id="heightT" type="number" value="150">
+    </label>
+    <label>False Alarm Prob (pfa):
+      <input id="pfa" type="number" value="1.2e-6">
+    </label>
+  </div>
+
+  <!-- Button to execute selected microservice -->
+  <button #runBtn class="run-btn">Run Microservice</button>
+</aside>
+
+<!-- Main content area -->
+<main class="main">
+  
+  <!-- Section for displaying 3D radar visualization -->
+  <section class="map-container">
+    <h2>3D Radar Visualization</h2>
+    
+    <!-- Placeholder for 3D map or radar visualization -->
+    <div #map3D class="map-placeholder"></div>
+  </section>
+
+</main>
+
+<!-- Output panel displaying logs and microservice results -->
+<aside class="output-panel">
+
+  <!-- Section for displaying log or status messages -->
+  <h3>Log Messages</h3>
+  <div #logBox class="log-box"></div>
+
+  <!-- Section for displaying microservice output charts or results -->
+  <h3>Microservice Output</h3>
+  <div #chartsPlaceholder class="charts-placeholder"></div>
+
+</aside>
+
+
+<!-- Footer section providing export options and status display -->
+<footer class="footer" 
+        style="grid-area: footer; background: #1a2525; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+
+  <!-- Left section: export buttons for user to download results -->
+  <div>
+    <!-- Button to export the output data to a PDF file -->
+    <button (click)="exportToPDF()">Export PDF</button>
+
+    <!-- Button to export the output data to a CSV file -->
+    <button (click)="exportToCSV()">Export CSV</button>
+  </div>
+
+  <!-- Right section: shows current status and progress bar -->
+  <div class="status" style="text-align: right;">
+    <!-- Displays current system or task status -->
+    <p #statusText>Status: Idle</p>
+
+    <!-- Progress bar to visually indicate task progress -->
+    <progress #progressBar max="100" value="0"></progress>
+  </div>
+
+</footer>
+
+
+</div>
+</div>

@@ -7,55 +7,57 @@ import com.xai.ecmmodel.repository.ECMParametersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service // Marks this class as a Spring service component
 public class EcmService {
 
-    private static final double C = 3e8;
+    private static final double C = 3e8; // Speed of light in meters/second
 
     @Autowired
-    private ECMParametersRepository inputRepo;
+    private ECMParametersRepository inputRepo; // Repository to save input parameters
 
     @Autowired
-    private ECMOutputsRepository outputRepo;
+    private ECMOutputsRepository outputRepo; // Repository to save calculation output
 
+    // Main method to perform ECM calculations
     public ECMOutputs calculateEcm(ECMParameters input) {
-        // 1. Persist the input parameters
+        // Save the input parameters to the database
         inputRepo.save(input);
 
-        // 2. Compute 3D distance
+        // Calculate 3D distance between jammer and radar
         double distance = calculateDistance3D(
             input.getLatJ(), input.getLongJ(), input.getHeightJ(),
             input.getLatR(), input.getLongR(), input.getHeightR()
         );
 
-        // 3. Compute ERP_dB: 10*log10(pJ) + gJ - lJ
+        // Calculate ERP in dB: Effective Radiated Power
         double erp_dB = 10 * Math.log10(input.getpJ()) 
                         + input.getgJ() 
                         - input.getlJ();
 
-        // 4. Compute FSPL_dB: 20*log10(4π·distance·freqJ·1e9 / C)
+        // Calculate Free Space Path Loss in dB
         double fspl_dB = 20 * Math.log10(
             4 * Math.PI * distance * input.getFreqJ() * 1e9 / C
         );
 
-        // 5. Compute bandwidthFactor = min(bJ, bR) / bR, then dB
+        // Calculate bandwidth factor and convert to dB
         double bandwidthFactor = Math.min(input.getbJ(), input.getbR()) 
                                  / input.getbR();
         double bandwidth_dB = 10 * Math.log10(bandwidthFactor);
 
-        // 6. Jamming‑to‑Radar Advantage j_ra_dB
+        // Calculate Jamming-to-Radar Advantage in dB
         double j_ra_dB = erp_dB - fspl_dB + bandwidth_dB;
 
-        // 7. Prepare and persist the output
+        // Create output object and save result to the database
         ECMOutputs output = new ECMOutputs();
         output.setJRa(j_ra_dB);
         output.setParameters(input);
         return outputRepo.save(output);
     }
 
+    // Helper method to calculate great-circle (2D) distance using the Haversine formula
     private double haversine(double lat1, double lon1,
                              double lat2, double lon2) {
-        double R = 6_371_000; // radius in meters
+        double R = 6_371_000; // Earth radius in meters
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
 
@@ -68,9 +70,10 @@ public class EcmService {
         return 2 * R * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
+    // Helper method to calculate full 3D distance including altitude
     private double calculateDistance3D(double lat1, double lon1, double h1,
                                        double lat2, double lon2, double h2) {
-        double horizontal = haversine(lat1, lon1, lat2, lon2);
-        return Math.sqrt(horizontal*horizontal + Math.pow(h1 - h2, 2));
+        double horizontal = haversine(lat1, lon1, lat2, lon2); // 2D distance
+        return Math.sqrt(horizontal * horizontal + Math.pow(h1 - h2, 2)); // Pythagorean distance
     }
 }

@@ -1,0 +1,6 @@
+com/xai/authentication/repository/UserRepository.class
+com/xai/authentication/LoginController.class
+com/xai/authentication/entity/User.class
+com/xai/authentication/LoginController$UserDto.class
+com/xai/authentication/TraineeApplication.class
+com/xai/authentication/UserService.class

@@ -1,0 +1,8 @@
+com/xai/absorptionloss/AbsorptionService.class
+com/xai/absorptionloss/Application.class
+com/xai/absorptionloss/repository/AtmosphericOutputsRepository.class
+com/xai/absorptionloss/entity/AtmosphericOutputs.class
+com/xai/absorptionloss/AbsorptionController.class
+com/xai/absorptionloss/entity/AtmosphericParameters.class
+com/xai/absorptionloss/entity/WeatherCondition.class
+com/xai/absorptionloss/repository/AtmosphericParametersRepository.class

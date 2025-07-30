@@ -2,20 +2,35 @@ package com.xai.ecmmodel.entity;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity // Marks this class as a JPA entity (maps to a database table)
 public class ECMParameters {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Primary key
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generated ID (incremented by database)
     private Long id;
 
+    // Jammer power, gain, and loss
     private double pJ, gJ, lJ;
+
+    // Jammer direction and orientation
     private double azimuthJ, elevationJ;
+
+    // Jammer beamwidths in azimuth and elevation
     private double beamwidthAzJ, beamwidthElJ;
+
+    // Jammer bandwidth and frequency
     private double bJ, freqJ;
+
+    // Jammer location: latitude, longitude, and height
     private double latJ, longJ, heightJ;
+
+    // Type of jammer
     private String jammerType;
+
+    // Radar location and parameters: lat, long, height, bandwidth, and frequency
     private double latR, longR, heightR, bR, freqR;
+
+    // Getters and setters for all fields
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

@@ -1,0 +1,96 @@
+/* Wrapper for full-screen background and centered layout */
+.wrapper {
+    background: linear-gradient(to bottom, #dceef2, #fef6e4); /* Soft gradient background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Smooth, readable font */
+    display: flex;                  /* Use flexbox for centering */
+    justify-content: center;       /* Center horizontally */
+    align-items: center;           /* Center vertically */
+    height: 100vh;                 /* Full viewport height */
+    margin: 0;                     /* Remove default margin */
+}
+
+/* Styling for the form container */
+form {
+    background-color: #ffffff;         /* White background */
+    padding: 30px 40px;                /* Inner spacing */
+    border-radius: 15px;               /* Rounded corners */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border: 2px solid #d0cfcf;         /* Light gray border */
+    width: 300px;                      /* Fixed width */
+    animation: fadeIn 1s ease-in-out;  /* Entry animation */
+}
+
+/* Header styling inside form */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #264653;                    /* Dark blue-gray */
+}
+
+/* Label styling */
+label {
+    font-weight: bold;
+    color: #2a9d8f;                    /* Greenish-blue */
+}
+
+/* Input and select styling (password) */
+select, input[type="password"] {
+    width: 100%;                       /* Full width */
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;           /* Light border */
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out; /* Smooth transitions */
+}
+
+/* Input and select styling (username) */
+select, input[type="username"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Focus state styling */
+select:focus, input:focus {
+    outline: none;
+    border-color: #2a9d8f;              /* Highlight color */
+    box-shadow: 0 0 8px #2a9d8f33;      /* Soft glow */
+}
+
+/* Button base styling */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #2a9d8f;          /* Main button color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #21867a;          /* Darker on hover */
+}
+
+/* Simple fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Error message styling */
+.error {
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
