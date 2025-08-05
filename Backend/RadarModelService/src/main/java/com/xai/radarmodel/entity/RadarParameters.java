@@ -35,6 +35,7 @@ public class RadarParameters {
 
     // Target coordinates (latitude, longitude, and height in meters)
     private double latT, longT, heightT;
+    private double latR, longR, heightR;
 
     // Probability of false alarm (used in detection threshold calculation)
     private double pfa;
@@ -76,6 +77,15 @@ public class RadarParameters {
 
     public double getHeightT() { return heightT; }
     public void setHeightT(double heightT) { this.heightT = heightT; }
+
+    public double getLatR() { return latR; }
+    public void setLatR(double latR) { this.latR = latR; }
+
+    public double getLongR() { return longR; }
+    public void setLongR(double longR) { this.longR = longR; }
+
+    public double getHeightR() { return heightR; }
+    public void setHeightR(double heightR) { this.heightR = heightR; }
 
     public double getPfa() { return pfa; }
     public void setPfa(double pfa) { this.pfa = pfa; }

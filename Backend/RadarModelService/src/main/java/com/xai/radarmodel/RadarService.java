@@ -18,7 +18,7 @@ public class RadarService {
 
     private static final double C = 3e8;       // Speed of light (m/s)
     private static final double SIGMA = 1.0;   // Radar cross-section (constant for now)
-    private static final double EPSILON = 1e-10; // Small value to avoid division by zero
+    private static final double EPSILON = 0; // Small value to avoid division by zero
 
     // Main method to perform radar signal and detection calculations
     public RadarOutputs calculateRadar(RadarParameters input) {
@@ -28,7 +28,7 @@ public class RadarService {
         double lambda = C / (input.getFreqR() * 1e9);
 
         // Calculate distance between origin and target radar
-        double r = calculateDistance3D(0, 0, 0, input.getLatT(), input.getLongT(), input.getHeightT());
+        double r = calculateDistance3D(input.getLatR(), input.getLongR(), input.getHeightR(), input.getLatT(), input.getLongT(), input.getHeightT());
 
         // Convert gain and loss from dB to linear
         double gR = Math.pow(10, input.getGr() / 10);

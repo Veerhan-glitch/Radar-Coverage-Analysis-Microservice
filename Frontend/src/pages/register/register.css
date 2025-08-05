@@ -1,4 +1,4 @@
-/* .wrapper {
+.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,4 +75,4 @@ button:hover {
 }
 
 .success { color: green; }
-.error   { color: red; } */
+.error   { color: red; }

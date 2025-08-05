@@ -77,6 +77,59 @@ ngAfterViewInit(): void {
   this.toggleAntenna('ecm');  // Show/hide ECM antenna options
   this.toggleAntenna('radar');// Show/hide radar antenna options
 }
+private units: Record<string, Record<string, string>> = {
+  'absorption-loss': {
+    ldash: 'dB'
+  },
+  'radar-model': {
+    sreceiveRadar: 'dB',
+    siradar: 'dB',
+    pd: '' // Probability, unitless
+  },
+  'ecm-model': {
+    jra: 'dB'
+  }
+};
+private INPUT_LABELS: Record<string, string> = {
+  rfr: 'Rainfall Rate (RFR) [mm/hr]',
+  sfr: 'Snowfall Rate (SFR) [mm/hr]',
+  visFog: 'Visibility in Fog [m]',
+  freqR: 'Radar Frequency (Freq_r) [Hz]',
+  freqJ: 'Jammer Frequency (Freq_j) [Hz]',
+  freqOp: 'Operating Frequency (Freq_op) [Hz]',
+  latR: 'Radar Latitude [°]',
+  longR: 'Radar Longitude [°]',
+  heightR: 'Radar Height [m]',
+  latT: 'Target Latitude [°]',
+  longT: 'Target Longitude [°]',
+  heightT: 'Target Height [m]',
+  latJ: 'Jammer Latitude [°]',
+  longJ: 'Jammer Longitude [°]',
+  heightJ: 'Jammer Height [m]',
+  pJ: 'Jammer Power (P_j) [W]',
+  gJ: 'Jammer Gain (G_j) [dB]',
+  lJ: 'Jammer Loss (L_j) [dB]',
+  azimuthJ: 'Azimuth (Azimuth_j) [°]',
+  elevationJ: 'Elevation (Elevation_j) [°]',
+  beamwidthAzJ: 'Beamwidth Azimuth [°]',
+  beamwidthElJ: 'Beamwidth Elevation [°]',
+  bJ: 'Jammer Bandwidth (B_j) [Hz]',
+  bR: 'Radar Bandwidth (B_r) [Hz]',
+  freqRm: 'Radar Frequency (Freq_r) [Hz]',
+  gr: 'Radar Gain (G_r) [dB]',
+  lo: 'Radar Loss (L_o) [dB]',
+  polarizationR: 'Radar Polarization (R)',
+  polarizationJ: 'Jammer Polarization (J)',
+  pr: 'Radar Power (P_r) [W]',
+  fr: 'Noise Figure (F_r) [dB]',
+  k: 'Boltzmann Constant (k) [J/K]',
+  t: 'System Temperature (T) [K]',
+  BMWEl_R: 'Beamwidth Elevation [°]',
+  BMWAz_R: 'Beamwidth Azimuth [°]',
+  elLimit: 'Elevation Limit [°]',
+  pfa: 'False Alarm Probability (Pfa)',
+};
+
 
 private onServiceChange(): void {
   // Hide all service forms
@@ -241,23 +294,29 @@ private async callMicroservice(): Promise<void> {
   }
 }
 private renderResults(result: any): void {
-  // Create container and table
   const container = document.createElement('div');
   container.className = 'vertical-result';
   const table = document.createElement('table');
 
-  // Add key-value result rows to the table
+  // Determine current model to apply units
+  const currentModel = this.serviceSelect.nativeElement.value;
+  const unitMap = this.units[currentModel] || {};
+
   Object.entries(result).forEach(([k, v]) => {
     if (['id', 'parameters', 'ldashDb', 'ldashDbLog'].includes(k)) return;
+
     const row = table.insertRow();
+    const value = typeof v === 'number' ? v.toFixed(4) : String(v);
+    const unit = unitMap[k] ? ` ${unitMap[k]}` : '';
+
     row.insertCell().textContent = k;
-    row.insertCell().textContent = typeof v === 'number' ? v.toFixed(4) : String(v);
+    row.insertCell().textContent = `${value}${unit}`;
   });
 
-  // Append table to output area
   this.chartsPlaceholder.nativeElement.innerHTML = '';
   this.chartsPlaceholder.nativeElement.appendChild(container).appendChild(table);
 }
+
 private renderMap(inputData: any): void {
   this.map3D.nativeElement.innerHTML = '';
 
@@ -347,81 +406,82 @@ exportToPDF(): void {
   const doc = new jsPDF();
   let y = 10;
 
-  // Set title
-  doc.setFontSize(14);
-  doc.text('Simulation Summary', 10, y);
-  y += 10;
-
-  // Iterate over each simulation run
   this.sessionRuns.forEach((run, index) => {
-    // Add run heading
+    if (index > 0) {
+      doc.addPage();
+      y = 10;
+    }
+
+    const model = run.model || 'Unknown';
+
     doc.setFontSize(12);
-    doc.text(`Run ${index + 1}: Model - ${run.model}`, 10, y);
-    y += 8;
-
-    // Input parameters section
-    doc.setFontSize(10);
-    doc.text('Input Parameters:', 10, y);
-    y += 6;
-    Object.entries(run.input).forEach(([k, v]) => {
-      const line = `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`;
-      doc.text(line, 15, y);
-      y += 6;
-      // Start a new page if content exceeds page height
-      if (y > 280) { doc.addPage(); y = 10; }
-    });
-
-    // Output parameters section
-    doc.text('Output Results:', 10, y);
-    y += 6;
-    Object.entries(run.output).forEach(([k, v]) => {
-      // Skip unnecessary keys
-      if (['id', 'parameters', 'ldashDb', 'ldashDbLog'].includes(k)) return;
-      const line = `${k}: ${typeof v === 'number' ? v.toFixed(4) : String(v)}`;
-      doc.text(line, 15, y);
-      y += 6;
-      if (y > 280) { doc.addPage(); y = 10; }
-    });
-
-    // Add space before the next run
+    doc.setTextColor(40);
+    doc.text(`Run ${index + 1} - Model: ${model}`, 15, y);
     y += 10;
-    if (y > 280) { doc.addPage(); y = 10; }
+
+    // Inputs
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    doc.text('Inputs:', 15, y);
+    y += 6;
+
+    Object.entries(run.input).forEach(([key, val]) => {
+      if (key === 'model') return;
+      const label = this.INPUT_LABELS?.[key] || key;
+      const text = `${label}: ${val}`;
+      doc.text(text, 15, y);
+      y += 6;
+      if (y > 280) { doc.addPage(); y = 10; }
+    });
+
+    y += 4;
+    doc.setTextColor(0);
+    doc.text('Outputs:', 15, y);
+    y += 6;
+
+    const unitsMap = this.units?.[model] || {};
+    Object.entries(run.output).forEach(([key, val]) => {
+      if (['id', 'parameters', 'ldashDb', 'ldashDbLog'].includes(key)) return;
+      const unit = unitsMap[key] ? ` (${unitsMap[key]})` : '';
+      const text = `${key}${unit}: ${val}`;
+      doc.text(text, 15, y);
+      y += 6;
+      if (y > 280) { doc.addPage(); y = 10; }
+    });
   });
 
-  // Save the generated PDF
-  doc.save('dashboard.pdf');
+  doc.save('analysis_results.pdf');
 }
-
 exportToCSV(): void {
-  const rows: string[] = [];
+  const rows: string[] = ['Run No.,Type,Model,Key,Label,Value'];
 
-  // CSV header
-  rows.push('Run,Type,Key,Value');
-
-  // Process each session run
   this.sessionRuns.forEach((run, index) => {
-    // Add input parameters
-    Object.entries(run.input).forEach(([k, v]) => {
-      const val = typeof v === 'object' ? JSON.stringify(v) : v;
-      rows.push(`${index + 1},Input,${k},${val}`);
+    const runNo = index + 1;
+    const model = run.model || 'Unknown';
+
+    // Inputs
+    Object.entries(run.input).forEach(([key, val]) => {
+      if (key === 'model') return;
+      const label = this.INPUT_LABELS?.[key] || key;
+      rows.push(`${runNo},Input,${model},${key},"${label}","${val}"`);
     });
 
-    // Add output results
-    Object.entries(run.output).forEach(([k, v]) => {
-      // Skip unnecessary fields
-      if (['id', 'parameters', 'ldashDb', 'ldashDbLog'].includes(k)) return;
-      const val = typeof v === 'number' ? v.toFixed(4) : String(v);
-      rows.push(`${index + 1},Output,${k},${val}`);
+    // Outputs
+    Object.entries(run.output).forEach(([key, val]) => {
+      if (['id', 'parameters', 'ldashDb', 'ldashDbLog'].includes(key)) return;
+      const label = key; // Or use this.OUTPUT_LABELS?.[key] || key
+      rows.push(`${runNo},Output,${model},${key},"${label}","${val}"`);
     });
   });
 
-  // Create and trigger download of CSV file
-  const blob = new Blob([rows.join('\r\n')], { type: 'text/csv' });
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'dashboard.csv';
+  a.download = 'analysis_results.csv';
   a.click();
-  URL.revokeObjectURL(url); // Clean up
+  URL.revokeObjectURL(url);
 }
+
+
 }

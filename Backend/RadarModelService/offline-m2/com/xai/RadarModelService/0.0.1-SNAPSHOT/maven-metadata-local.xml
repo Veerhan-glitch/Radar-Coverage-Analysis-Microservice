@@ -3,7 +3,7 @@
   <groupId>com.xai</groupId>
   <artifactId>RadarModelService</artifactId>
   <versioning>
-    <lastUpdated>20250729133120</lastUpdated>
+    <lastUpdated>20250803102011</lastUpdated>
     <snapshot>
       <localCopy>true</localCopy>
     </snapshot>
@@ -11,12 +11,12 @@
       <snapshotVersion>
         <extension>pom</extension>
         <value>0.0.1-SNAPSHOT</value>
-        <updated>20250729133120</updated>
+        <updated>20250803102011</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>jar</extension>
         <value>0.0.1-SNAPSHOT</value>
-        <updated>20250729133120</updated>
+        <updated>20250803102011</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
